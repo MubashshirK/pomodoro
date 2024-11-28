@@ -2,11 +2,14 @@ let timer;
 let isPaused = true;
 let remainingTime = 25 * 60;
 let progressBar = document.getElementById('progress-bar-filled');
-let totalTime = 25 * 60; // 25 minutes
+let totalTime = 25 * 60;
 let timeLeft = totalTime;
-let workDuration = 25 * 60; // Default: 25 minutes
-let shortBreakDuration = 5 * 60; // Default: 5 minutes
-let longBreakDuration = 15 * 60; // Default: 15 minutes
+let workDuration = 25 * 60;
+let shortBreakDuration = 5 * 60;
+let longBreakDuration = 15 * 60;
+let currentSession = 'work';
+let workCount = 0;
+let sessionHeading = document.getElementById('session-heading');
 
 //format time as MM:SS
 function formatTime(seconds) {
@@ -20,8 +23,26 @@ function updateDisplay() {
     document.getElementById('timer').innerText = formatTime(remainingTime);
 }
 
+// Show a notification
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.innerText = message;
+    notification.style.display = 'block';
+    notification.style.opacity = '1';
+
+    // Auto-hide notification
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 400);
+    }, 4000);
+}
+
 // Start timer
 function startTimer() {
+    clearInterval(timer);
+
     if (isPaused) {
         isPaused = false;
         toggleButtons('start');
@@ -29,14 +50,50 @@ function startTimer() {
             if (remainingTime > 0) {
                 remainingTime--;
                 updateDisplay();
-                updateProgressBar(); // Update the progress bar
+                updateProgressBar();
             } else {
                 clearInterval(timer);
-                alert('Time is up!');
-                toggleButtons('reset');
+                handleSessionEnd();
             }
         }, 1000);
     }
+}
+
+// Handle session end and transition
+function handleSessionEnd() {
+    clearInterval(timer);
+    // Transition logic for sessions
+    if (currentSession === 'work') {
+        workCount++;
+        if (workCount % 4 === 0) {
+            // After 4 work sessions, start a long break
+            currentSession = 'longBreak';
+            remainingTime = longBreakDuration;
+            totalTime = longBreakDuration;
+            showNotification('Time for a long break! 🛌');
+        } else {
+            // Otherwise, start a short break
+            currentSession = 'shortBreak';
+            remainingTime = shortBreakDuration;
+            totalTime = shortBreakDuration;
+            showNotification('Time for a short break! ☕');
+        }
+    } else {
+        // After a break, return to a work session
+        currentSession = 'work';
+        remainingTime = workDuration;
+        totalTime = workDuration;
+        showNotification('Back to work! 💪');
+    }
+
+    // Reset and prepare for the new session
+    isPaused = true;
+    updateSessionHeading();
+    updateDisplay();
+    updateProgressBar();
+
+    // Automatically start the new session
+    startTimer();
 }
 
 // Resume timer
@@ -48,10 +105,10 @@ function resumeTimer() {
             if (remainingTime > 0) {
                 remainingTime--;
                 updateDisplay();
-                updateProgressBar(); // Update the progress bar
+                updateProgressBar();
             } else {
                 clearInterval(timer);
-                alert('Time is up!');
+                alert('Time is Focus Session is Complete!🥳!');
                 toggleButtons('reset');
             }
         }, 1000);
@@ -69,9 +126,13 @@ function pauseTimer() {
 function resetTimer() {
     isPaused = true;
     clearInterval(timer);
-    remainingTime = workDuration; // Use the custom work duration
+    currentSession = 'work';
+    workCount = 0;
+    remainingTime = workDuration;
+    totalTime = workDuration;
+    updateSessionHeading();
     updateDisplay();
-    updateProgressBar(); // If using a progress bar or ring
+    updateProgressBar();
     toggleButtons('reset');
 }
 
@@ -109,30 +170,57 @@ function toggleButtons(action) {
     }
 }
 
+
+
+// Update session heading
+function updateSessionHeading() {
+    if (currentSession === 'work') {
+        sessionHeading.innerText = 'Focus Session';
+    } else if (currentSession === 'shortBreak') {
+        sessionHeading.innerText = 'Short Break';
+    } else if (currentSession === 'longBreak') {
+        sessionHeading.innerText = 'Long Break';
+    }
+}
+
 // Toggle custom duration visibility
-document.getElementById('edit-duration-button').addEventListener('click', function() {
+document.getElementById('edit-duration-button').addEventListener('click', function () {
     const durationForm = document.getElementById('custom-duration-form');
     // Toggle display: If hidden, show it; if shown, hide it
     if (durationForm.style.display === 'none') {
         durationForm.style.display = 'flex';
-        this.innerText = "Hide Durations"; // Change button text
+        this.innerText = "Hide Duration";
     } else {
         durationForm.style.display = 'none';
-        this.innerText = "Edit Durations"; // Change button text back
+        this.innerText = "Edit Duration";
     }
 });
 
 // Save custom durations
 function saveDurations() {
-    workDuration = parseInt(document.getElementById('work-duration').value, 10) * 60;
-    shortBreakDuration = parseInt(document.getElementById('short-break-duration').value, 10) * 60;
-    longBreakDuration = parseInt(document.getElementById('long-break-duration').value, 10) * 60;
+    const newWorkDuration = parseInt(document.getElementById('work-duration').value, 10) * 60;
+    const newShortBreakDuration = parseInt(document.getElementById('short-break-duration').value, 10) * 60;
+    const newLongBreakDuration = parseInt(document.getElementById('long-break-duration').value, 10) * 60;
 
-    remainingTime = workDuration; // Set remainingTime to reflect the new work duration
-    totalTime = workDuration;
+    // Update the durations
+    workDuration = newWorkDuration || workDuration;
+    shortBreakDuration = newShortBreakDuration || shortBreakDuration;
+    longBreakDuration = newLongBreakDuration || longBreakDuration;
 
-    alert('Durations updated successfully!');
-    updateDisplay(); // Immediately update the timer display
+    // Reset the remainingTime only if it's the work session
+    if (currentSession === 'work') {
+        remainingTime = workDuration;
+        totalTime = workDuration;
+    } else if (currentSession === 'shortBreak') {
+        remainingTime = shortBreakDuration;
+        totalTime = shortBreakDuration;
+    } else if (currentSession === 'longBreak') {
+        remainingTime = longBreakDuration;
+        totalTime = longBreakDuration;
+    }
+
+    showNotification('Durations Updated!');
+    updateDisplay();
     updateProgressBar();
 
     // Hide the custom duration form after saving
@@ -151,4 +239,5 @@ document.getElementById('reset').addEventListener('click', resetTimer);
 
 // Initialize the display
 updateDisplay();
+updateSessionHeading();
 updateProgressBar();
