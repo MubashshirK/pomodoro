@@ -10,6 +10,8 @@ let longBreakDuration = 15 * 60;
 let currentSession = 'work';
 let workCount = 0;
 let sessionHeading = document.getElementById('session-heading');
+// Track whether Auto-Pause is enabled
+let autoPauseEnabled = false;
 
 //format time as MM:SS
 function formatTime(seconds) {
@@ -92,8 +94,12 @@ function handleSessionEnd() {
     updateDisplay();
     updateProgressBar();
 
-    // Automatically start the new session
-    startTimer();
+    if (autoPauseEnabled) {
+        isPaused = true; // Set to paused
+        toggleButtons('reset'); // Show Start button to manually resume
+    } else {
+        startTimer(); // Automatically start the next session
+    }
 }
 
 // Resume timer
@@ -189,10 +195,10 @@ document.getElementById('edit-duration-button').addEventListener('click', functi
     // Toggle display: If hidden, show it; if shown, hide it
     if (durationForm.style.display === 'none') {
         durationForm.style.display = 'flex';
-        this.innerText = "Hide Duration";
+        this.innerText = "Hide Options";
     } else {
         durationForm.style.display = 'none';
-        this.innerText = "Edit Duration";
+        this.innerText = "Options";
     }
 });
 
@@ -219,13 +225,13 @@ function saveDurations() {
         totalTime = longBreakDuration;
     }
 
-    showNotification('Durations Updated!');
+    showNotification('Changes Applied!');
     updateDisplay();
     updateProgressBar();
 
     // Hide the custom duration form after saving
     document.getElementById('custom-duration-form').style.display = 'none';
-    document.getElementById('edit-duration-button').innerText = "Edit Durations"; // Reset button text
+    document.getElementById('edit-duration-button').innerText = "Options";
 }
 
 // Event listener to save durations
@@ -236,6 +242,11 @@ document.getElementById('start').addEventListener('click', startTimer);
 document.getElementById('pause').addEventListener('click', pauseTimer);
 document.getElementById('resume').addEventListener('click', resumeTimer);
 document.getElementById('reset').addEventListener('click', resetTimer);
+
+// Listen for Auto-Pause checkbox toggle
+document.getElementById('auto-pause-toggle').addEventListener('change', (e) => {
+    autoPauseEnabled = e.target.checked;
+});
 
 // Initialize the display
 updateDisplay();

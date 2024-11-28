@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -20,7 +21,7 @@
         </div>
         <div id="notification"></div>
         <div id="custom-duration-container">
-            <button id="edit-duration-button">Edit Duration</button>
+            <button id="edit-duration-button">Options</button>
 
             <!-- Hidden by default, toggled visibility when the button is clicked -->
             <div id="custom-duration-form" style="display: none;">
@@ -35,6 +36,12 @@
                 <div class="duration-input">
                     <label for="long-break-duration">Long Break (min):</label>
                     <input id="long-break-duration" type="number" min="1" value="15">
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" id="auto-pause-toggle" />
+                        Auto-Pause After Session
+                    </label>
                 </div>
                 <button id="save-durations">Save</button>
             </div>
