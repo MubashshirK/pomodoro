@@ -1,31 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Parkinsans:wght@300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Signika+Negative:wght@300..700&display=swap');
+
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #9fc9de, #20148b);
-    /* Soft gradient */
+    font-family: 'Poppins';
+    background: linear-gradient(135deg, #20148b, #ffc2ff);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    max-height: 100vh;
     margin: 0;
+    padding: 0;
     color: white;
+    overflow: hidden;
 }
 
-/* Container for the timer and buttons */
 #container {
     text-align: center;
     background-color: rgba(0, 0, 0, 0.7);
-    /* Transparent black */
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0px 0px 3cap rgba(0, 0, 0, 0.4);
     width: 90%;
     max-width: 400px;
+    margin: 0;
+    overflow: hidden;
 }
 
 h1 {
-    color: azure;
+    color: aliceblue;
     font-size: 2rem;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 #notification {
@@ -36,16 +40,14 @@ h1 {
     transition: opacity 0.4s ease-in-out;
 }
 
-
-/* Timer display */
 #timer {
-    font-size: 4.5rem;
+    color: aliceblue;
+    font-size: 4rem;
     font-weight: bold;
-    margin: 20px 0;
+    margin-top: 10px;
     letter-spacing: 1px;
 }
 
-/* Button container */
 #button-container {
     display: flex;
     justify-content: center;
@@ -53,18 +55,17 @@ h1 {
     gap: 10px;
 }
 
-/* Buttons */
 button {
-    padding: 12px 25px;
+    font-family: 'Poppins';
+    padding: 11px 25px;
     font-size: 16px;
-    margin: 10px 5px;
+    margin: 10px 5px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-/* Button colors */
 #start {
     background-color: #4CAF50;
     color: white;
@@ -72,7 +73,7 @@ button {
 
 #pause {
     display: none;
-    background-color: #FF9800;
+    background-color: #ef9001;
     color: white;
 }
 
@@ -88,7 +89,6 @@ button {
     color: white;
 }
 
-/* Button hover effects */
 button:hover {
     transform: scale(1.1);
 }
@@ -97,7 +97,6 @@ button:active {
     transform: scale(0.95);
 }
 
-/* Button disabled state */
 button:disabled {
     background-color: #BDBDBD;
     cursor: not-allowed;
@@ -108,13 +107,13 @@ button:disabled {
     height: 8px;
     background-color: #cccccc;
     border-radius: 4px;
-    margin: 15px 0;
+    margin: 15px 0 20px;
     overflow: hidden;
 }
 
 #progress-bar-filled {
     height: 100%;
-    background: linear-gradient(to right, #ff3176, #2f4ae2);
+    background: linear-gradient(to right, #ff4583, #2f4ae2);
     transition: width 1s linear;
 }
 
@@ -122,11 +121,10 @@ button:disabled {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 25px;
+    margin-top: 10px;
 }
 
 #edit-duration-button {
-    padding: 12px 25px;
     background-color: #373adc;
     color: white;
     font-size: 16px;
@@ -136,17 +134,15 @@ button:disabled {
     cursor: pointer;
     transition: all 0.3s ease;
     width: 80%;
-    margin: 20px;
+    margin-bottom: 15px;
 }
 
 #edit-duration-button:hover {
-    background-color: #3235ee;
+    background-color: #3328ff;
 }
 
 #custom-duration-form {
-    display: none;
     flex-direction: column;
-    align-items: center;
     width: 100%;
     max-width: 300px;
 }
@@ -154,9 +150,6 @@ button:disabled {
 #custom-duration-form .duration-input {
     margin-bottom: 5px;
     text-align: left;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 #custom-duration-form label {
@@ -183,8 +176,7 @@ button:disabled {
 }
 
 #custom-duration-form button {
-    padding: 12px 25px;
-    background-color: #373adc;
+    background-color: #4447d8;
     color: white;
     font-size: 16px;
     font-weight: bold;
@@ -196,7 +188,7 @@ button:disabled {
 }
 
 #custom-duration-form button:hover {
-    background-color: #4c4fff;
+    background-color: #3a3aff;
 }
 
 
