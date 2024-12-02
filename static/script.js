@@ -10,8 +10,36 @@ let longBreakDuration = 15 * 60;
 let currentSession = 'work';
 let workCount = 0;
 let sessionHeading = document.getElementById('session-heading');
-// Track whether Auto-Pause is enabled
 let autoPauseEnabled = false;
+let soundEnabled = true;
+
+// Select the sidebar and toggle button
+const sidebar = document.getElementById('sidebar');
+const toggleSidebarButton = document.getElementById('toggle-sidebar-button');
+const saveButton = document.getElementById('save-durations');
+const iconClosed = document.getElementById('icon-closed');
+const iconOpened = document.getElementById('icon-opened');
+
+// Toggle sidebar and icons
+toggleSidebarButton.addEventListener('click', () => {
+    const isOpen = sidebar.classList.toggle('open');
+
+    // Toggle icon visibility
+    if (isOpen) {
+        iconClosed.classList.add('hidden');
+        iconOpened.classList.remove('hidden');
+    } else {
+        iconClosed.classList.remove('hidden');
+        iconOpened.classList.add('hidden');
+    }
+});
+
+// Close sidebar when the save button is clicked
+saveButton.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    iconClosed.classList.remove('hidden');
+    iconOpened.classList.add('hidden');
+});
 
 //format time as MM:SS
 function formatTime(seconds) {
@@ -25,14 +53,14 @@ function updateDisplay() {
     document.getElementById('timer').innerText = formatTime(remainingTime);
 }
 
-// Show a notification
+// Notification
 function showNotification(message) {
     const notification = document.getElementById('notification');
     notification.innerText = message;
     notification.style.display = 'block';
     notification.style.opacity = '1';
 
-    // Auto-hide notification
+    // Hide notification
     setTimeout(() => {
         notification.style.opacity = '0';
         setTimeout(() => {
@@ -61,14 +89,15 @@ function startTimer() {
     }
 }
 
-// Handle session end and transition
+// Handle session end & transition
 function handleSessionEnd() {
     clearInterval(timer);
-    // Transition logic for sessions
+
+    // Transition logic
     if (currentSession === 'work') {
         workCount++;
         if (workCount % 4 === 0) {
-            // After 4 work sessions, start a long break
+            // After 4 work sessions, start long break
             currentSession = 'longBreak';
             remainingTime = longBreakDuration;
             totalTime = longBreakDuration;
@@ -95,10 +124,10 @@ function handleSessionEnd() {
     updateProgressBar();
 
     if (autoPauseEnabled) {
-        isPaused = true; // Set to paused
-        toggleButtons('reset'); // Show Start button to manually resume
+        isPaused = true;
+        toggleButtons('reset');
     } else {
-        startTimer(); // Automatically start the next session
+        startTimer()
     }
 }
 
@@ -114,7 +143,7 @@ function resumeTimer() {
                 updateProgressBar();
             } else {
                 clearInterval(timer);
-                alert('Time is Focus Session is Complete!🥳!');
+                showNotification('Focus Session is Complete!🥳');
                 toggleButtons('reset');
             }
         }, 1000);
@@ -148,6 +177,18 @@ function updateProgressBar() {
     progressBar.style.width = progress + '%';
 }
 
+// Load sound files
+const workStartSound = new Audio('static/assets/sounds/work-start.mp3');
+const breakStartSound = new Audio('static/assets/sounds/break-start.mp3');
+const sessionEndSound = new Audio('static/assets/sounds/session-end.mp3');
+
+// Sound function
+function playSound(sound) {
+    if (soundEnabled) {
+        sound.play();
+    }
+}
+
 // Toggle button visibility
 function toggleButtons(action) {
     const startButton = document.getElementById('start');
@@ -160,23 +201,25 @@ function toggleButtons(action) {
         pauseButton.style.display = 'inline';
         resumeButton.style.display = 'none';
         resetButton.style.display = 'inline';
+        playSound(workStartSound);
     } else if (action === 'pause') {
         startButton.style.display = 'none';
         pauseButton.style.display = 'none';
         resumeButton.style.display = 'inline';
+        playSound(breakStartSound);
     } else if (action === 'resume') {
         startButton.style.display = 'none';
         pauseButton.style.display = 'inline';
         resumeButton.style.display = 'none';
+        playSound(breakStartSound);
     } else if (action === 'reset') {
         startButton.style.display = 'inline';
         pauseButton.style.display = 'none';
         resumeButton.style.display = 'none';
         resetButton.style.display = 'none';
+        playSound(sessionEndSound)
     }
 }
-
-
 
 // Update session heading
 function updateSessionHeading() {
@@ -189,18 +232,6 @@ function updateSessionHeading() {
     }
 }
 
-// Toggle custom duration visibility
-document.getElementById('edit-duration-button').addEventListener('click', function () {
-    const durationForm = document.getElementById('custom-duration-form');
-    // Toggle display: If hidden, show it; if shown, hide it
-    if (durationForm.style.display === 'none') {
-        durationForm.style.display = 'flex';
-        this.innerText = "Hide Options";
-    } else {
-        durationForm.style.display = 'none';
-        this.innerText = "Options";
-    }
-});
 
 // Save custom durations
 function saveDurations() {
@@ -225,13 +256,9 @@ function saveDurations() {
         totalTime = longBreakDuration;
     }
 
-    showNotification('Changes Applied!');
+    showNotification('Changes Applied! 🔧');
     updateDisplay();
     updateProgressBar();
-
-    // Hide the custom duration form after saving
-    document.getElementById('custom-duration-form').style.display = 'none';
-    document.getElementById('edit-duration-button').innerText = "Options";
 }
 
 // Event listener to save durations
@@ -246,6 +273,11 @@ document.getElementById('reset').addEventListener('click', resetTimer);
 // Listen for Auto-Pause checkbox toggle
 document.getElementById('auto-pause-toggle').addEventListener('change', (e) => {
     autoPauseEnabled = e.target.checked;
+});
+
+// Event listener to the sound toggle
+document.getElementById('sound-toggle').addEventListener('change', (e) => {
+    soundEnabled = e.target.checked;
 });
 
 // Initialize the display

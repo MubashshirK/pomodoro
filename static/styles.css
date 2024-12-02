@@ -1,17 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Parkinsans:wght@300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Signika+Negative:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-    font-family: 'Poppins';
-    background: linear-gradient(135deg, #20148b, #ffc2ff);
+    font-family: 'montserrat';
+    background: linear-gradient(35deg, #e3ade3, #20148b);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     max-height: 100vh;
+    color: white;
     margin: 0;
     padding: 0;
-    color: white;
     overflow: hidden;
+}
+
+.toggle-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.9);
+}
+
+#icon-opened {
+    transform: rotate(90deg);
+}
+
+#icon-closed {
+    transform: rotate(0deg);
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 300px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+#sidebar.open {
+    right: 0;
+}
+
+#toggle-sidebar-button {
+    position: fixed;
+    top: 20px;
+    right: 25px;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+#toggle-sidebar-button svg {
+    position: fixed;
+}
+
+#settings {
+    position: fixed;
+    margin-top: 26px;
 }
 
 #container {
@@ -23,6 +88,7 @@ body {
     width: 90%;
     max-width: 400px;
     margin: 0;
+    margin-right: 0px;
     overflow: hidden;
 }
 
@@ -42,9 +108,10 @@ h1 {
 
 #timer {
     color: aliceblue;
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: bold;
     margin-top: 10px;
+    margin-bottom: 10px;
     letter-spacing: 1px;
 }
 
@@ -56,9 +123,8 @@ h1 {
 }
 
 button {
-    font-family: 'Poppins';
-    padding: 11px 25px;
-    font-size: 16px;
+    padding: 14px 25px;
+    font-size: 17px;
     margin: 10px 5px 15px;
     border: none;
     border-radius: 8px;
@@ -121,58 +187,40 @@ button:disabled {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px;
-}
-
-#edit-duration-button {
-    background-color: #373adc;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 80%;
-    margin-bottom: 15px;
-}
-
-#edit-duration-button:hover {
-    background-color: #3328ff;
-}
-
-#custom-duration-form {
-    flex-direction: column;
+    margin-top: 80px;
     width: 100%;
-    max-width: 300px;
 }
 
 #custom-duration-form .duration-input {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     text-align: left;
 }
 
 #custom-duration-form label {
     font-size: 14px;
     color: #ccc;
-    margin-bottom: 5px;
-    text-align: left;
+}
+
+#short-break-duration,
+#work-duration,
+#long-break-duration {
+    width: 93%;
 }
 
 #custom-duration-form input {
     padding: 10px;
     background-color: #292939;
-    color: #f8f8f8;
+    color: #ccc;
     font-size: 16px;
     border-radius: 5px;
+    margin-top: 5px;
     border: 1px solid #444;
-    width: 100%;
     transition: all 0.3s ease;
 }
 
 #custom-duration-form input:focus {
     outline: none;
-    border-color: #3235ec;
+    border-color: #484bff;
 }
 
 #custom-duration-form button {
@@ -191,10 +239,40 @@ button:disabled {
     background-color: #3a3aff;
 }
 
+#sound-toggle {
+    margin-top: 10px;
+    font-size: 14px;
+    justify-content: center;
+}
+
+#sound-toggle input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#save-durations {
+    margin-top: 20px;
+    margin-bottom: 0;
+}
 
 @media (max-width: 600px) {
     #custom-duration-container {
         width: 90%;
         padding: 15px;
+    }
+
+    #sidebar {
+        width: 55%;
     }
 }

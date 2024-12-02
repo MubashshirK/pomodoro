@@ -20,30 +20,49 @@
             <div id="progress-bar-filled" style="width: 100%;"></div>
         </div>
         <div id="notification"></div>
-        <div id="custom-duration-container">
-            <button id="edit-duration-button">Options</button>
+    </div>
 
-            <!-- Hidden by default, toggled visibility when the button is clicked -->
-            <div id="custom-duration-form" style="display: none;">
-                <div class="duration-input">
-                    <label for="work-duration">Work (min):</label>
-                    <input id="work-duration" type="number" min="1" value="25">
+    <!-- Toggle Sidebar Button -->
+    <button id="toggle-sidebar-button" aria-label="Toggle Settings">
+        <svg id="icon-closed" class="toggle-icon" xmlns="http://www.w3.org/2000/svg" height="24px"
+            viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+        </svg>
+        <svg id="icon-opened" class="toggle-icon hidden" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#FFFFFF">
+            <path d="m251.33-204.67-46.66-46.66L433.33-480 204.67-708.67l46.66-46.66L480-526.67l228.67-228.66 46.66 46.66L526.67-480l228.66 228.67-46.66 46.66L480-433.33 251.33-204.67Z" />
+        </svg>
+    </button>
+    <div id="sidebar">
+        <span id="settings">Settings</span>
+        <div id="custom-duration-container">
+            <div id="edit-duration-button">
+                <div id="custom-duration-form">
+                    <div class="duration-input">
+                        <label for="work-duration">Focus Session (min):</label>
+                        <input id="work-duration" type="number" min="1" value="25">
+                    </div>
+                    <div class="duration-input">
+                        <label for="short-break-duration">Short Break (min):</label>
+                        <input id="short-break-duration" type="number" min="1" value="5">
+                    </div>
+                    <div class="duration-input">
+                        <label for="long-break-duration">Long Break (min):</label>
+                        <input id="long-break-duration" type="number" min="1" value="15">
+                    </div>
+                    <div class="checkbox-container">
+                        <label>
+                            <input type="checkbox" id="auto-pause-toggle" />
+                            Auto-Pause After Session
+                        </label>
+                    </div>
+                    <div class="checkbox-container">
+                        <label>
+                            <input type="checkbox" id="sound-toggle" checked />
+                            Enable Sound Alerts
+                        </label>
+                    </div>
+                    <button id="save-durations">Save</button>
                 </div>
-                <div class="duration-input">
-                    <label for="short-break-duration">Short Break (min):</label>
-                    <input id="short-break-duration" type="number" min="1" value="5">
-                </div>
-                <div class="duration-input">
-                    <label for="long-break-duration">Long Break (min):</label>
-                    <input id="long-break-duration" type="number" min="1" value="15">
-                </div>
-                <div>
-                    <label>
-                        <input type="checkbox" id="auto-pause-toggle" />
-                        Auto-Pause After Session
-                    </label>
-                </div>
-                <button id="save-durations">Save</button>
             </div>
         </div>
     </div>
