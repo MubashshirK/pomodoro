@@ -180,6 +180,7 @@ function updateProgressBar() {
 // Load sound files
 const workStartSound = new Audio('static/assets/sounds/work-start.mp3');
 const breakStartSound = new Audio('static/assets/sounds/break-start.mp3');
+const resumeSound = new Audio('static/assets/sounds/resume-session.mp3');
 const sessionEndSound = new Audio('static/assets/sounds/session-end.mp3');
 
 // Sound function
@@ -211,7 +212,7 @@ function toggleButtons(action) {
         startButton.style.display = 'none';
         pauseButton.style.display = 'inline';
         resumeButton.style.display = 'none';
-        playSound(breakStartSound);
+        playSound(resumeSound);
     } else if (action === 'reset') {
         startButton.style.display = 'inline';
         pauseButton.style.display = 'none';
