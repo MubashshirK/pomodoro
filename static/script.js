@@ -233,7 +233,6 @@ function updateSessionHeading() {
     }
 }
 
-
 // Save custom durations
 function saveDurations() {
     const newWorkDuration = parseInt(document.getElementById('work-duration').value, 10) * 60;

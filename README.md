@@ -21,4 +21,4 @@ A simple and intuitive Timer Web app based on Pomodoro technique, built using HT
 - **JavaScript** for interactivity and timer functionality.
 
 ### Inspiration
-This project is inspired by my own struggle with focus during studies, By using this technique I managed to study and manage time better.
+This project is inspired by my own struggle with focus during studies, By using this technique I managed to study better.
