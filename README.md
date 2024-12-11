@@ -1,5 +1,5 @@
 # pomodoro-project
-#### Video Demo:  (https://youtu.be/58dSXzgDtEQ)
+#### Video Demo:  <https://youtu.be/58dSXzgDtEQ>
 #### Description:
 A simple and intuitive Timer Web app based on Pomodoro technique, built using HTML, CSS, and JavaScript to help people manage their time effectively and boost productivity.
 
