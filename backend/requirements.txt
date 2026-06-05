@@ -5,3 +5,4 @@ flask-login==0.6.3
 python-dateutil==2.9.0
 python-dotenv==1.0.1
 pg8000==1.31.4
+gunicorn==23.0.0

@@ -15,7 +15,12 @@ type RequestOptions = Omit<RequestInit, "body"> & {
   params?: Record<string, string | number | boolean | undefined>;
 };
 
-const BASE = "/api";
+// Base URL for the backend API. In production, VITE_API_BASE_URL
+// points at the Railway/Render backend (e.g. https://api.example.com).
+// In local dev, it falls back to the Vite proxy / relative path.
+const BASE =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, "") ||
+  "/api";
 
 function buildUrl(path: string, params?: RequestOptions["params"]): string {
   let url = `${BASE}${path.startsWith("/") ? path : `/${path}`}`;

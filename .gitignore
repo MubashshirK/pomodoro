@@ -22,10 +22,6 @@ backend/instance/*.db
 backend/instance/*.sqlite
 backend/instance/*.sqlite3
 
-# Vercel serverless shim at repo root
-api/__pycache__/
-api/*.pyc
-
 # IDE
 .vscode/
 .idea/

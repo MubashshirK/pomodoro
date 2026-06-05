@@ -33,6 +33,16 @@ def create_app(config_overrides: dict | None = None) -> Flask:
     except Exception:
         log.exception("Could not parse DATABASE_URL")
 
+    is_prod = os.environ.get("FLASK_ENV") == "production"
+    cors_origins = [
+        o.strip()
+        for o in os.environ.get(
+            "CORS_ORIGINS",
+            "http://localhost:5173,http://127.0.0.1:5173",
+        ).split(",")
+        if o.strip()
+    ]
+
     app.config.update(
         SECRET_KEY=os.environ.get("FLASK_SECRET_KEY", "dev-secret-change-in-prod"),
         SQLALCHEMY_DATABASE_URI=os.environ.get(
@@ -41,19 +51,21 @@ def create_app(config_overrides: dict | None = None) -> Flask:
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         # NullPool: each request opens a fresh DB connection and closes it
         # after. This avoids cross-instance pool exhaustion on serverless
-        # hosts (Vercel) and is harmless for local dev. pool_pre_ping
-        # transparently reconnects if the server has dropped the socket
-        # (matters for Neon auto-suspend).
+        # hosts and is harmless for local dev. pool_pre_ping transparently
+        # reconnects if the server has dropped the socket (matters for
+        # Neon auto-suspend).
         SQLALCHEMY_ENGINE_OPTIONS={
             "poolclass": NullPool,
             "pool_pre_ping": True,
         },
-        SESSION_COOKIE_SAMESITE="Lax",
+        # Cross-origin (Vercel -> Railway) requires SameSite=None + Secure.
+        # Set SESSION_COOKIE_SAMESITE=None in Railway env to enable this.
+        SESSION_COOKIE_SAMESITE=os.environ.get("SESSION_COOKIE_SAMESITE", "Lax"),
         SESSION_COOKIE_HTTPONLY=True,
-        SESSION_COOKIE_SECURE=os.environ.get("FLASK_ENV") == "production",
-        REMEMBER_COOKIE_SAMESITE="Lax",
+        SESSION_COOKIE_SECURE=is_prod,
+        REMEMBER_COOKIE_SAMESITE=os.environ.get("SESSION_COOKIE_SAMESITE", "Lax"),
         REMEMBER_COOKIE_HTTPONLY=True,
-        REMEMBER_COOKIE_SECURE=os.environ.get("FLASK_ENV") == "production",
+        REMEMBER_COOKIE_SECURE=is_prod,
         JSON_SORT_KEYS=False,
     )
 
@@ -66,7 +78,7 @@ def create_app(config_overrides: dict | None = None) -> Flask:
     CORS(
         app,
         supports_credentials=True,
-        origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+        origins=cors_origins,
     )
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
