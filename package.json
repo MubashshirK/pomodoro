@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch --import tsx server.ts",
-    "build": "tsc --noEmit",
+    "build": "cd frontend && npm install && npm run build",
+    "build:api": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
