@@ -1,6 +1,6 @@
-import { withErrorHandling, json } from "./_lib/http.js";
-import { readSession, requireUserId } from "./_lib/session.js";
-import { computeStats, parsePeriod, parseTzOffset } from "./_lib/stats.js";
+import { withErrorHandling, json } from "../_lib/http.js";
+import { readSession, requireUserId } from "../_lib/session.js";
+import { computeStats, parsePeriod, parseTzOffset } from "../_lib/stats.js";
 
 export default withErrorHandling(async (req: Request) => {
   const session = await readSession(req);

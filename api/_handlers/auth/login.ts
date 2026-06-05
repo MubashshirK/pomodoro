@@ -1,7 +1,7 @@
-import { withErrorHandling, json, parseJson, jsonError } from "../_lib/http.js";
-import { getUserByEmail, verifyPassword, userToDict } from "../_lib/auth.js";
-import { HttpError, buildSessionCookie } from "../_lib/session.js";
-import { requireString } from "../_lib/validation.js";
+import { withErrorHandling, json, parseJson, jsonError } from "../../_lib/http.js";
+import { getUserByEmail, verifyPassword, userToDict } from "../../_lib/auth.js";
+import { HttpError, buildSessionCookie } from "../../_lib/session.js";
+import { requireString } from "../../_lib/validation.js";
 
 export default withErrorHandling(async (req: Request) => {
   if (req.method !== "POST") return jsonError("Method not allowed", 405, { allow: "POST" });

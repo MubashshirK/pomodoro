@@ -1,10 +1,10 @@
-import { withErrorHandling, json, jsonError, parseJson, settingsToDict } from "./_lib/http.js";
-import { readSession, requireUserId, HttpError } from "./_lib/session.js";
-import { db } from "./_lib/db.js";
-import { settings } from "../lib/schema.js";
+import { withErrorHandling, json, jsonError, parseJson, settingsToDict } from "../_lib/http.js";
+import { readSession, requireUserId, HttpError } from "../_lib/session.js";
+import { db } from "../_lib/db.js";
+import { settings } from "../../lib/schema.js";
 import { eq } from "drizzle-orm";
-import { getOrCreateSettings } from "./_lib/auth.js";
-import { inSet, optionalBool, optionalNumber } from "./_lib/validation.js";
+import { getOrCreateSettings } from "../_lib/auth.js";
+import { inSet, optionalBool, optionalNumber } from "../_lib/validation.js";
 
 const THEMES = ["light", "dark", "system"] as const;
 type Theme = (typeof THEMES)[number];

@@ -1,8 +1,8 @@
-import { withErrorHandling, json, jsonError } from "../_lib/http.js";
-import { getUserById, userToDict } from "../_lib/auth.js";
-import { readSession, requireUserId, HttpError } from "../_lib/session.js";
-import { db } from "../_lib/db.js";
-import { users } from "../../lib/schema.js";
+import { withErrorHandling, json, jsonError } from "../../_lib/http.js";
+import { getUserById, userToDict } from "../../_lib/auth.js";
+import { readSession, requireUserId, HttpError } from "../../_lib/session.js";
+import { db } from "../../_lib/db.js";
+import { users } from "../../../lib/schema.js";
 import { eq } from "drizzle-orm";
 
 export default withErrorHandling(async (req: Request) => {

@@ -1,6 +1,6 @@
-import { withErrorHandling, json, jsonError } from "./_lib/http.js";
+import { withErrorHandling, json, jsonError } from "../_lib/http.js";
 import { sql } from "drizzle-orm";
-import { db } from "./_lib/db.js";
+import { db } from "../_lib/db.js";
 
 export default withErrorHandling(async (_req: Request) => {
   try {

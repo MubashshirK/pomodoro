@@ -1,9 +1,9 @@
-import { withErrorHandling, json, jsonError, parseJson, taskToDict } from "./_lib/http.js";
-import { readSession, requireUserId, HttpError } from "./_lib/session.js";
-import { db } from "./_lib/db.js";
-import { tasks } from "../lib/schema.js";
+import { withErrorHandling, json, jsonError, parseJson, taskToDict } from "../_lib/http.js";
+import { readSession, requireUserId, HttpError } from "../_lib/session.js";
+import { db } from "../_lib/db.js";
+import { tasks } from "../../lib/schema.js";
 import { asc, eq, sql } from "drizzle-orm";
-import { optionalString, optionalNumber, requireString } from "./_lib/validation.js";
+import { optionalString, optionalNumber, requireString } from "../_lib/validation.js";
 
 export default withErrorHandling(async (req: Request) => {
   const session = await readSession(req);

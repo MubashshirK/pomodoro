@@ -1,10 +1,10 @@
-import { withErrorHandling, json, jsonError, parseJson } from "../_lib/http.js";
-import { getUserById, hashPassword, verifyPassword } from "../_lib/auth.js";
-import { readSession, requireUserId, HttpError } from "../_lib/session.js";
-import { db } from "../_lib/db.js";
-import { users } from "../../lib/schema.js";
+import { withErrorHandling, json, jsonError, parseJson } from "../../_lib/http.js";
+import { getUserById, hashPassword, verifyPassword } from "../../_lib/auth.js";
+import { readSession, requireUserId, HttpError } from "../../_lib/session.js";
+import { db } from "../../_lib/db.js";
+import { users } from "../../../lib/schema.js";
 import { eq } from "drizzle-orm";
-import { requireString } from "../_lib/validation.js";
+import { requireString } from "../../_lib/validation.js";
 
 export default withErrorHandling(async (req: Request) => {
   if (req.method !== "PUT") return jsonError("Method not allowed", 405, { allow: "PUT" });

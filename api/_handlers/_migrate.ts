@@ -1,8 +1,8 @@
-import { withErrorHandling, json, jsonError } from "./_lib/http.js";
+import { withErrorHandling, json, jsonError } from "../_lib/http.js";
 import { sql } from "drizzle-orm";
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { db } from "./_lib/db.js";
+import { db } from "../_lib/db.js";
 
 async function listMigrations(): Promise<string[]> {
   const dir = join(process.cwd(), "drizzle");

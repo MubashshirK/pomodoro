@@ -1,6 +1,6 @@
-import { withErrorHandling, json, jsonError } from "../_lib/http.js";
-import { createUser, userToDict } from "../_lib/auth.js";
-import { buildSessionCookie } from "../_lib/session.js";
+import { withErrorHandling, json, jsonError } from "../../_lib/http.js";
+import { createUser, userToDict } from "../../_lib/auth.js";
+import { buildSessionCookie } from "../../_lib/session.js";
 
 function randomGuestName(): string {
   return `Guest-${Math.random().toString(36).slice(2, 8)}`;
