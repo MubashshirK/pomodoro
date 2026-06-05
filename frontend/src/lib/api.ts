@@ -15,10 +15,9 @@ type RequestOptions = Omit<RequestInit, "body"> & {
   params?: Record<string, string | number | boolean | undefined>;
 };
 
-// Vercel "Services" config exposes the API under /server/*.
-// Vercel strips the /server prefix before invoking the Flask
-// function, so the backend's /api/* routes still match.
-const BASE = "/server/api";
+// Local dev: Vite proxies /api/* -> http://127.0.0.1:5000 (see vite.config.ts)
+// For Vercel deploys, change to "/server/api" (Vercel Services strips /server).
+const BASE = "/api";
 
 function buildUrl(path: string, params?: RequestOptions["params"]): string {
   let url = `${BASE}${path.startsWith("/") ? path : `/${path}`}`;
