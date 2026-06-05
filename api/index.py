@@ -10,19 +10,27 @@ _BACKEND = str(Path(__file__).resolve().parent.parent / "backend")
 if _BACKEND not in sys.path:
     sys.path.insert(0, _BACKEND)
 
+print(f"[api/index.py] loaded; backend on sys.path: {_BACKEND}", file=sys.stderr)
+
+create_app = None
 try:
     from app import create_app  # noqa: E402
-    app = create_app()
+    print("[api/index.py] create_app imported OK", file=sys.stderr)
 except Exception:
-    # If anything goes wrong during import or app construction, return a
-    # JSON error to the client AND log the full traceback to stderr
-    # (Vercel captures stderr in the function logs). This replaces the
-    # opaque "500 with empty body" so the failure is debuggable.
-    traceback.print_exc()
-    sys.stderr.write("\n--- api/index.py failed during create_app() ---\n")
+    print("[api/index.py] FAILED to import create_app:", file=sys.stderr)
     traceback.print_exc(file=sys.stderr)
 
-    def app(environ, start_response):
+_app = None
+if create_app is not None:
+    try:
+        _app = create_app()
+        print(f"[api/index.py] Flask app created: {_app}", file=sys.stderr)
+    except Exception:
+        print("[api/index.py] FAILED in create_app():", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
+
+if _app is None:
+    def _fallback(environ, start_response):
         status = "500 Internal Server Error"
         body = b'{"error":"Server failed to start. Check Vercel function logs."}'
         headers = [
@@ -31,3 +39,7 @@ except Exception:
         ]
         start_response(status, headers)
         return [body]
+    _app = _fallback
+
+# MUST be at module top level for Vercel's Python detector.
+app = _app
