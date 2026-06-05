@@ -1,5 +1,13 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "experimentalServices": {
+    "web": {
+      "entrypoint": "frontend",
+      "framework": "vite",
+      "routePrefix": "/"
+    },
+    "api": {
+      "entrypoint": "api/index.py",
+      "routePrefix": "/server"
+    }
+  }
 }
