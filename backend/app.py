@@ -107,7 +107,25 @@ def register_error_handlers(app: Flask) -> None:
 
     @app.errorhandler(500)
     def server_error(e):
-        return jsonify({"error": "Internal server error"}), 500
+        # Log the full traceback so Vercel function logs show the
+        # actual cause (Flask's default propagation to stderr is
+        # unreliable on the Vercel Python runtime).
+        import logging, traceback
+        logging.getLogger("flask.app").error(
+            "Unhandled 500: %s\n%s", e, traceback.format_exc()
+        )
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+    @app.errorhandler(Exception)
+    def unhandled_exception(e):
+        # Catch-all so ANY uncaught exception is logged with traceback
+        # (Flask's default 500 handler does this, but Vercel often
+        # drops stderr from the WSGI path; this makes it explicit).
+        import logging, traceback
+        logging.getLogger("flask.app").error(
+            "Unhandled exception: %s\n%s", e, traceback.format_exc()
+        )
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 
 def register_root_routes(app: Flask) -> None:
