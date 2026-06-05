@@ -1,7 +1,30 @@
 {
   "name": "pomodoro-pro",
   "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
-    "vercel-build": "cd frontend && npm install && npm run build"
+    "dev": "node --watch --import tsx server.ts",
+    "build": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0",
+    "bcryptjs": "^2.4.3",
+    "drizzle-orm": "^0.36.0",
+    "iron-session": "^8.0.4"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.1",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.14.0",
+    "drizzle-kit": "^0.28.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
   }
 }
