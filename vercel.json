@@ -1,12 +1,17 @@
 {
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/dist",
-  "functions": {
-    "api/[...path].ts": {
-      "memory": 1024,
-      "maxDuration": 30
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "api/[...path].ts",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
