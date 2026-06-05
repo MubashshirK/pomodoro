@@ -19,6 +19,7 @@ server.err.log
 cookies.txt
 tmp-*.json
 run-test.ps1
+public/
 
 # Python / backend
 backend/__pycache__/

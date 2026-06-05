@@ -1,17 +1,5 @@
 {
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "frontend/dist"
-      }
-    },
-    {
-      "src": "api/[...path].ts",
-      "use": "@vercel/node"
-    }
-  ],
+  "buildCommand": "npm run build",
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
