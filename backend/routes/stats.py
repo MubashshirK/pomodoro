@@ -2,7 +2,6 @@ from datetime import datetime, timedelta, date
 
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from sqlalchemy import func
 
 from extensions import db
 from models import PomodoroSession, Task
@@ -28,42 +27,35 @@ def _tz_offset() -> int:
         return 0
 
 
-def _local_completed_at():
-    """SQL expression: completed_at shifted by the client's UTC offset, so
-    date extraction matches the user's local calendar day."""
-    offset = _tz_offset()
-    if offset == 0:
-        return PomodoroSession.completed_at
-    return func.datetime(PomodoroSession.completed_at, f"+{offset} minutes")
-
-
 def _local_now() -> datetime:
     """Naive datetime representing the user's local 'now'."""
     return datetime.utcnow() + timedelta(minutes=_tz_offset())
 
 
-def _streak(user_id: int) -> int:
-    local_completed = _local_completed_at()
+def _work_days(user_id: int) -> set:
+    """Distinct local calendar days on which the user completed at least one
+    work session. Computed in Python for portability across SQLite / Postgres
+    — the previous SQL used a SQLite-only `datetime()` modifier string."""
+    offset = _tz_offset()
     rows = (
-        db.session.query(func.date(local_completed).label("d"))
+        db.session.query(PomodoroSession.completed_at)
         .filter(
             PomodoroSession.user_id == user_id,
             PomodoroSession.session_type == "work",
         )
-        .group_by("d")
         .all()
     )
-    days = set()
-    for row in rows:
-        if row.d is None:
-            continue
-        try:
-            days.add(date.fromisoformat(str(row.d)))
-        except ValueError:
-            continue
+    days: set = set()
+    for (completed_at,) in rows:
+        local_d = (completed_at + timedelta(minutes=offset)).date()
+        days.add(local_d)
+    return days
+
+
+def _streak(user_id: int) -> int:
+    days = _work_days(user_id)
     if not days:
         return 0
-
     today = _local_now().date()
     current = today
     if current not in days:
@@ -82,66 +74,41 @@ def _streak(user_id: int) -> int:
 def get_stats():
     period = _parse_period(request.args.get("period"))
     days = PERIOD_DAYS[period]
+    offset = _tz_offset()
     # Range stays in UTC — completed_at is stored in UTC. We just need
     # enough history to cover `days` local days, which is at most `days`
     # UTC days as well (offset only shifts by a few hours at most).
     now = datetime.utcnow()
     start = now - timedelta(days=days)
 
-    base = PomodoroSession.query.filter(
-        PomodoroSession.user_id == current_user.id,
-        PomodoroSession.completed_at >= start,
-    )
-
-    total_pomodoros = base.filter(
-        PomodoroSession.session_type == "work"
-    ).count()
-
-    total_focus_seconds = (
-        db.session.query(func.coalesce(func.sum(PomodoroSession.duration_seconds), 0))
-        .filter(
-            PomodoroSession.user_id == current_user.id,
-            PomodoroSession.session_type == "work",
-            PomodoroSession.completed_at >= start,
-        )
-        .scalar()
-    )
-
-    per_type_rows = (
+    rows = (
         db.session.query(
+            PomodoroSession.completed_at,
             PomodoroSession.session_type,
-            func.count(PomodoroSession.id),
+            PomodoroSession.duration_seconds,
         )
         .filter(
             PomodoroSession.user_id == current_user.id,
             PomodoroSession.completed_at >= start,
         )
-        .group_by(PomodoroSession.session_type)
         .all()
     )
-    by_type = {"work": 0, "shortBreak": 0, "longBreak": 0}
-    for session_type, count in per_type_rows:
-        by_type[session_type] = count
 
-    local_completed = _local_completed_at()
-    per_day_rows = (
-        db.session.query(
-            func.date(local_completed).label("d"),
-            func.count(PomodoroSession.id).label("count"),
-            func.coalesce(func.sum(PomodoroSession.duration_seconds), 0).label("seconds"),
-        )
-        .filter(
-            PomodoroSession.user_id == current_user.id,
-            PomodoroSession.session_type == "work",
-            PomodoroSession.completed_at >= start,
-        )
-        .group_by("d")
-        .all()
-    )
-    per_day_map = {
-        str(row.d): {"count": row.count, "focus_seconds": int(row.seconds)}
-        for row in per_day_rows
-    }
+    by_type = {"work": 0, "shortBreak": 0, "longBreak": 0}
+    per_day_map: dict = {}
+    total_pomodoros = 0
+    total_focus_seconds = 0
+
+    for completed_at, session_type, duration in rows:
+        by_type[session_type] = by_type.get(session_type, 0) + 1
+        if session_type == "work":
+            local_d = (completed_at + timedelta(minutes=offset)).date()
+            key = local_d.isoformat()
+            total_pomodoros += 1
+            total_focus_seconds += duration
+            bucket = per_day_map.setdefault(key, {"count": 0, "focus_seconds": 0})
+            bucket["count"] += 1
+            bucket["focus_seconds"] += duration
 
     per_day = []
     # Use the client's local "today" so the chart always shows the user's
@@ -150,8 +117,8 @@ def get_stats():
     for i in range(days - 1, -1, -1):
         d = today - timedelta(days=i)
         key = d.isoformat()
-        stats = per_day_map.get(key, {"count": 0, "focus_seconds": 0})
-        per_day.append({"date": key, **stats})
+        bucket = per_day_map.get(key, {"count": 0, "focus_seconds": 0})
+        per_day.append({"date": key, **bucket})
 
     top_tasks = (
         Task.query.filter(
@@ -168,7 +135,7 @@ def get_stats():
         "range_start": start.isoformat() + "Z",
         "range_end": now.isoformat() + "Z",
         "total_pomodoros": total_pomodoros,
-        "total_focus_seconds": int(total_focus_seconds or 0),
+        "total_focus_seconds": total_focus_seconds,
         "current_streak": _streak(current_user.id),
         "by_session_type": by_type,
         "per_day": per_day,

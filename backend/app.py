@@ -3,6 +3,7 @@ from pathlib import Path
 
 from flask import Flask, jsonify
 from flask_cors import CORS
+from sqlalchemy.pool import NullPool
 
 from extensions import db
 from auth import login_manager
@@ -21,6 +22,15 @@ def create_app(config_overrides: dict | None = None) -> Flask:
             "DATABASE_URL", "sqlite:///pomodoro.db"
         ),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        # NullPool: each request opens a fresh DB connection and closes it
+        # after. This avoids cross-instance pool exhaustion on serverless
+        # hosts (Vercel) and is harmless for local dev. pool_pre_ping
+        # transparently reconnects if the server has dropped the socket
+        # (matters for Neon auto-suspend).
+        SQLALCHEMY_ENGINE_OPTIONS={
+            "poolclass": NullPool,
+            "pool_pre_ping": True,
+        },
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SECURE=os.environ.get("FLASK_ENV") == "production",
