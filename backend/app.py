@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 
@@ -10,11 +11,27 @@ from auth import login_manager
 from models import User, Settings
 from routes import auth_bp, tasks_bp, sessions_bp, settings_bp, stats_bp
 
+log = logging.getLogger("backend.app")
+
 
 def create_app(config_overrides: dict | None = None) -> Flask:
     app = Flask(__name__, instance_relative_config=True)
 
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+
+    db_url = os.environ.get("DATABASE_URL", "sqlite:///pomodoro.db")
+    # Log the scheme + host (no password) so we can verify the env var
+    # is what we expect without leaking secrets into the function logs.
+    try:
+        from urllib.parse import urlparse
+        parsed = urlparse(db_url)
+        log.info(
+            "DATABASE_URL scheme=%s host=%s db=%s query=%s",
+            parsed.scheme, parsed.hostname, parsed.path.lstrip("/"),
+            parsed.query or "(none)",
+        )
+    except Exception:
+        log.exception("Could not parse DATABASE_URL")
 
     app.config.update(
         SECRET_KEY=os.environ.get("FLASK_SECRET_KEY", "dev-secret-change-in-prod"),
