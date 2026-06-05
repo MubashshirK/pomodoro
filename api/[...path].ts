@@ -1,9 +1,3 @@
-import type { Config } from "@vercel/functions";
-
-export const config: Config = {
-  runtime: "nodejs20.x",
-};
-
 type Handler = (req: Request, context?: { params: Record<string, string> }) => Promise<Response>;
 
 const handlers: Record<string, Handler> = {
