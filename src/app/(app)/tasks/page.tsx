@@ -94,7 +94,7 @@ export default function TasksPage() {
         </div>
         <Button onClick={openCreate} className="ml-auto gap-1">
           <Plus className="h-4 w-4" />
-          New task
+          New Task
         </Button>
       </div>
 

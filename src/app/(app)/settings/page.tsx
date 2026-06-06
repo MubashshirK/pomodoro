@@ -149,7 +149,8 @@ export default function SettingsPage() {
           ) : (
             <Save className="h-4 w-4" />
           )}
-          Save changes
+          <span className="sm:hidden">Save</span>
+          <span className="hidden sm:inline">Save Changes</span>
         </Button>
       </div>
 
