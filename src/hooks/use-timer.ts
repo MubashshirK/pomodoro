@@ -7,14 +7,11 @@ import { useSettings } from "@/hooks/use-settings";
 import { useLogSession } from "@/hooks/use-sessions";
 import type { SessionType } from "@/types";
 
-type WorkerMsg =
-  | { type: "tick"; remainingMs: number }
-  | { type: "paused"; remainingMs: number }
-  | { type: "done" }
-  | { type: "reset_done" };
+const TICK_MS = 250;
 
 export function useTimer() {
-  const workerRef = useRef<Worker | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const endTimeRef = useRef<number | null>(null);
   const logSession = useLogSession();
   const settingsQuery = useSettings();
   const completedRef = useRef(false);
@@ -48,10 +45,13 @@ export function useTimer() {
     soundManager.preload();
   }, []);
 
-  // --- Callbacks (declared first so the worker effect can close over them) ---
+  // --- Callbacks (declared first so the interval effect can close over them) ---
 
-  const postToWorker = useCallback((msg: unknown) => {
-    workerRef.current?.postMessage(msg);
+  const clearTick = useCallback(() => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
   }, []);
 
   const advanceToNextSession = useCallback(() => {
@@ -72,31 +72,68 @@ export function useTimer() {
     if (s.status === "running") return;
     completedRef.current = false;
     s.setStatus("running");
-    postToWorker({ type: "start", durationMs: s.remainingMs });
+    endTimeRef.current = Date.now() + Math.max(0, s.remainingMs);
+    clearTick();
+    intervalRef.current = setInterval(() => {
+      if (endTimeRef.current === null) return;
+      const remaining = Math.max(0, endTimeRef.current - Date.now());
+      useTimerStore.getState().setRemaining(remaining);
+      if (remaining <= 0) {
+        clearTick();
+        endTimeRef.current = null;
+        if (completedRef.current) return;
+        completedRef.current = true;
+        handleSessionCompleteRef.current();
+      }
+    }, TICK_MS);
     if (s.sessionType === "work") soundManager.play("work-start");
-    else if (s.sessionType === "shortBreak") soundManager.play("break-start");
     else soundManager.play("break-start");
-  }, [postToWorker]);
+  }, [clearTick]);
 
   const pause = useCallback(() => {
-    postToWorker({ type: "pause" });
-  }, [postToWorker]);
+    if (endTimeRef.current !== null) {
+      const remaining = Math.max(0, endTimeRef.current - Date.now());
+      const store = useTimerStore.getState();
+      clearTick();
+      endTimeRef.current = null;
+      store.setRemaining(remaining);
+      store.setStatus("paused");
+    } else {
+      const store = useTimerStore.getState();
+      clearTick();
+      store.setStatus("paused");
+    }
+  }, [clearTick]);
 
   const resume = useCallback(() => {
     const s = useTimerStore.getState();
     if (s.status !== "paused") return;
     completedRef.current = false;
     s.setStatus("running");
-    postToWorker({ type: "start", durationMs: s.remainingMs });
+    endTimeRef.current = Date.now() + Math.max(0, s.remainingMs);
+    clearTick();
+    intervalRef.current = setInterval(() => {
+      if (endTimeRef.current === null) return;
+      const remaining = Math.max(0, endTimeRef.current - Date.now());
+      useTimerStore.getState().setRemaining(remaining);
+      if (remaining <= 0) {
+        clearTick();
+        endTimeRef.current = null;
+        if (completedRef.current) return;
+        completedRef.current = true;
+        handleSessionCompleteRef.current();
+      }
+    }, TICK_MS);
     soundManager.play("resume-session");
-  }, [postToWorker]);
+  }, [clearTick]);
 
   const reset = useCallback(() => {
     const s = useTimerStore.getState();
+    clearTick();
+    endTimeRef.current = null;
     s.setStatus("idle");
     s.setTotal(durationFor(s.sessionType, s.settings));
-    postToWorker({ type: "reset" });
-  }, [postToWorker]);
+  }, [clearTick]);
 
   const handleSessionComplete = useCallback(() => {
     const s = useTimerStore.getState();
@@ -147,13 +184,11 @@ export function useTimer() {
   }, [logSession, advanceToNextSession, start]);
 
   const skip = useCallback(() => {
-    const s = useTimerStore.getState();
-    if (s.status === "running" || s.status === "paused") {
-      postToWorker({ type: "reset" });
-    }
+    clearTick();
+    endTimeRef.current = null;
     completedRef.current = true; // suppress the 'done' branch
     advanceToNextSession();
-  }, [postToWorker, advanceToNextSession]);
+  }, [clearTick, advanceToNextSession]);
 
   const switchSession = useCallback(
     (next: SessionType) => {
@@ -176,42 +211,23 @@ export function useTimer() {
 
   // --- Effects that close over callbacks (must be after callback declarations) ---
 
-  // Keep latest handleSessionComplete in a ref so the worker effect can stay stable
-  // (useLogSession from TanStack Query returns a new ref on every render, which
-  // would otherwise tear down + recreate the worker on every state change).
+  // Keep latest handleSessionComplete in a ref so the start/resume intervals
+  // can stay stable (useLogSession from TanStack Query returns a new ref on
+  // every render, which would otherwise tear down + recreate the interval
+  // on every state change).
   const handleSessionCompleteRef = useRef(handleSessionComplete);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     handleSessionCompleteRef.current = handleSessionComplete;
   }, [handleSessionComplete]);
 
-  // Create worker once
+  // Cleanup interval on unmount
   useEffect(() => {
-    const w = new Worker(
-      new URL("../lib/timer-worker.ts", import.meta.url),
-      { type: "module" },
-    );
-    workerRef.current = w;
-    w.addEventListener("message", (e: MessageEvent<WorkerMsg>) => {
-      const msg = e.data;
-      const store = useTimerStore.getState();
-      if (msg.type === "tick") {
-        store.setRemaining(msg.remainingMs);
-      } else if (msg.type === "paused") {
-        store.setRemaining(msg.remainingMs);
-        store.setStatus("paused");
-      } else if (msg.type === "done") {
-        if (completedRef.current) return;
-        completedRef.current = true;
-        handleSessionCompleteRef.current();
-      } else if (msg.type === "reset_done") {
-        // No-op
-      }
-    });
     return () => {
-      w.terminate();
-      workerRef.current = null;
+      clearTick();
+      endTimeRef.current = null;
     };
-  }, []);
+  }, [clearTick]);
 
   // Tab title sync
   useEffect(() => {
