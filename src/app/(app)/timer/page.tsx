@@ -50,7 +50,17 @@ export default function TimerPage() {
   }, [status, settings?.notifications_enabled]);
 
   const cyclesLimit = settings?.cycles_until_long_break ?? 4;
-  const cycleNumber = (completedCycles % cyclesLimit) + 1;
+  // completedCycles = number of finished work sessions.
+  //   - On work: we're in cycle (completedCycles + 1)
+  //   - On break: we just finished cycle completedCycles
+  //   - Edge case: manual switch to break before any work completes
+  //     (completedCycles === 0) → still show cycle 1
+  const cycleNumber =
+    sessionType === "work"
+      ? (completedCycles % cyclesLimit) + 1
+      : completedCycles === 0
+        ? 1
+        : (completedCycles % cyclesLimit) || cyclesLimit;
   const accent = colorVarFor(sessionType);
 
   return (
