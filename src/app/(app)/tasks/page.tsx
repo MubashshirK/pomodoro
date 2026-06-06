@@ -78,9 +78,25 @@ export default function TasksPage() {
     update.mutate({ id: task.id, patch: { is_completed: next } });
   };
 
-  const onReorder = (newOrder: (number | string)[]) => {
-    const ids = newOrder.map((id) => (typeof id === "string" ? Number.parseInt(id, 10) : id));
-    reorder.mutate(ids);
+  const onReorder = (newVisibleOrder: (number | string)[]) => {
+    const newIds = newVisibleOrder.map((id) =>
+      typeof id === "string" ? Number.parseInt(id, 10) : id,
+    );
+    if (filter === "all") {
+      reorder.mutate(newIds);
+      return;
+    }
+    const visibleSet = new Set(newIds);
+    let newIdIdx = 0;
+    const merged: number[] = [];
+    for (const task of tasks) {
+      if (visibleSet.has(task.id)) {
+        merged.push(newIds[newIdIdx++]);
+      } else {
+        merged.push(task.id);
+      }
+    }
+    reorder.mutate(merged);
   };
 
   return (
@@ -100,12 +116,10 @@ export default function TasksPage() {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <TaskFilters value={filter} onChange={setFilter} counts={counts} />
-        {filter === "all" ? (
-          <p className="text-xs text-muted-foreground">
-            <ListTodo className="mr-1 inline h-3 w-3" />
-            Drag the handle to reorder
-          </p>
-        ) : null}
+        <p className="text-xs text-muted-foreground">
+          <ListTodo className="mr-1 inline h-3 w-3" />
+          Drag the handle to reorder
+        </p>
       </div>
 
       {isLoading ? (
@@ -127,7 +141,7 @@ export default function TasksPage() {
           onDelete={onDelete}
           onToggleComplete={onToggleComplete}
           deletingId={deletingId}
-          draggingEnabled={filter === "all"}
+          draggingEnabled
         />
       )}
 
