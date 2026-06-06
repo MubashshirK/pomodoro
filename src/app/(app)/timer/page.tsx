@@ -72,7 +72,7 @@ export default function TimerPage() {
             Focus, take a break, repeat.
           </p>
         </div>
-        <div className="mt-4 flex basis-full flex-wrap items-center gap-2 sm:basis-auto">
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           <Badge
             variant="secondary"
             className={cn(
