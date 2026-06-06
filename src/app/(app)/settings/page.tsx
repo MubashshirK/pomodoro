@@ -142,7 +142,7 @@ export default function SettingsPage() {
           type="button"
           onClick={form.handleSubmit(onSubmit)}
           disabled={isLoading || update.isPending}
-          className="ml-auto gap-1.5"
+          className="ml-auto mt-4 gap-1.5"
         >
           {update.isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
