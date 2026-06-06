@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { AppLayoutShell } from "@/components/layout/app-layout-shell";
+import { PageContent } from "@/components/layout/page-content";
 
 export default async function AppLayout({
   children,
@@ -11,5 +12,9 @@ export default async function AppLayout({
   if (!session?.user) {
     redirect("/sign-in?callbackUrl=%2Ftimer");
   }
-  return <AppLayoutShell session={session}>{children}</AppLayoutShell>;
+  return (
+    <AppLayoutShell session={session}>
+      <PageContent>{children}</PageContent>
+    </AppLayoutShell>
+  );
 }
