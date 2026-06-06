@@ -64,7 +64,7 @@ export default function TimerPage() {
   const accent = colorVarFor(sessionType);
 
   return (
-    <div className="flex h-full flex-col gap-1 sm:gap-4">
+    <div className="flex h-full flex-col gap-3 sm:gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
