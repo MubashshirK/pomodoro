@@ -27,8 +27,8 @@ export function ActiveTaskCard() {
     const fresh = data?.tasks.find((t) => t.id === activeTask.id);
     if (!fresh) return;
     if (fresh.is_completed) {
-      setActiveTask(null);
-      return;
+      const t = setTimeout(() => setActiveTask(null), 2000);
+      return () => clearTimeout(t);
     }
     if (
       fresh.completed_pomodoros !== activeTask.completed_pomodoros ||
