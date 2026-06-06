@@ -140,7 +140,7 @@ export function AppShell({
             </SheetTrigger>
           </header>
           <main className="flex-1 overflow-y-auto bg-background">
-            <div className="mx-auto flex h-full w-full max-w-5xl flex-col px-4 pt-10 pb-4 sm:px-6 sm:py-6">
+            <div className="mx-auto flex h-full w-full max-w-5xl flex-col px-4 pt-3 pb-4 sm:px-6 sm:py-6">
               {children}
             </div>
           </main>
@@ -170,11 +170,11 @@ export function AppShell({
           <ThemeToggle expanded />
         </div>
         <Separator />
-        <div className="shrink-0 px-2 pt-2 pb-1">
+        <div className="shrink-0 px-2 py-0.5">
           <UserMenu name={session?.user?.name} email={session?.user?.email} isGuest={session?.user?.isGuest} expanded />
         </div>
         <Separator />
-        <div className="shrink-0 px-4 py-1.5 text-center text-[11px] text-muted-foreground">
+        <div className="shrink-0 px-4 py-1 text-center text-[11px] text-muted-foreground">
           <span>Built by — Mubashshir Khan</span>
         </div>
       </SheetContent>

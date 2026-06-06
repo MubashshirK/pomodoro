@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Keyboard, Coffee, Flame, Repeat } from "lucide-react";
@@ -24,6 +24,14 @@ export default function TimerPage() {
   const notifPerm = useNotificationPermission();
   const { data: stats } = useStats("day");
   const streak = stats?.current_streak ?? 0;
+
+  const [ringSize, setRingSize] = useState(260);
+  useEffect(() => {
+    const update = () => setRingSize(window.innerWidth < 640 ? 210 : 260);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   const notifPermMutateRef = useRef(notifPerm.mutate);
   useEffect(() => {
@@ -50,9 +58,11 @@ export default function TimerPage() {
 
   return (
     <div className="flex h-full flex-col gap-2 sm:gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Timer</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            Timer
+          </h1>
           <p className="hidden text-sm text-muted-foreground sm:block">
             Focus, take a break, repeat.
           </p>
@@ -92,11 +102,11 @@ export default function TimerPage() {
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-4">
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-3 sm:gap-4">
         <SessionTypeSwitch />
 
         <Card className="overflow-hidden border-border/60">
-          <CardContent className="flex flex-col items-center gap-1 py-6">
+          <CardContent className="flex flex-col items-center gap-1 py-4 sm:py-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={sessionType}
@@ -118,11 +128,11 @@ export default function TimerPage() {
               remainingMs={remainingMs}
               totalMs={totalMs}
               sessionType={sessionType}
-              size={260}
+              size={ringSize}
               strokeWidth={8}
-              className="my-2"
+              className="my-1 sm:my-2"
             >
-              <TimerDisplay ms={remainingMs} />
+              <TimerDisplay ms={remainingMs} compact={ringSize < 240} />
             </TimerRing>
 
             <TimerControls />
