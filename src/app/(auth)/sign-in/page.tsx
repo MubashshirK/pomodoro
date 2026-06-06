@@ -4,7 +4,8 @@ import { Suspense, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Loader2, Timer } from "lucide-react";
+import { Loader2, Timer, UserPlus } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,6 +26,7 @@ function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [guestSubmitting, setGuestSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(
     initialError ? "Invalid email or password" : null,
   );
@@ -47,6 +49,32 @@ function SignInForm() {
     router.refresh();
   }
 
+  async function onContinueAsGuest() {
+    setError(null);
+    setGuestSubmitting(true);
+    try {
+      const res = await fetch("/api/auth/sign-in/guest", { method: "POST" });
+      if (!res.ok) {
+        toast.error("Could not start a guest session");
+        return;
+      }
+      const creds = (await res.json()) as { email: string; password: string };
+      const signInRes = await signIn("credentials", {
+        email: creds.email,
+        password: creds.password,
+        redirect: false,
+      });
+      if (!signInRes || signInRes.error) {
+        toast.error("Guest session failed. Please sign in.");
+        return;
+      }
+      router.push(callbackUrl);
+      router.refresh();
+    } finally {
+      setGuestSubmitting(false);
+    }
+  }
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="space-y-2 text-center">
@@ -64,10 +92,11 @@ function SignInForm() {
               id="email"
               type="email"
               autoComplete="email"
+              placeholder="you@example.com"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={submitting}
+              disabled={submitting || guestSubmitting}
             />
           </div>
           <div className="space-y-2">
@@ -76,17 +105,22 @@ function SignInForm() {
               id="password"
               type="password"
               autoComplete="current-password"
+              placeholder="At least 8 characters"
               required
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={submitting}
+              disabled={submitting || guestSubmitting}
             />
           </div>
           {error ? (
             <p className="text-sm text-destructive">{error}</p>
           ) : null}
-          <Button type="submit" className="w-full" disabled={submitting}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={submitting || guestSubmitting}
+          >
             {submitting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
@@ -94,6 +128,25 @@ function SignInForm() {
             )}
           </Button>
         </form>
+        <div className="my-4 flex items-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-xs uppercase text-muted-foreground">or</span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={onContinueAsGuest}
+          disabled={submitting || guestSubmitting}
+        >
+          {guestSubmitting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <UserPlus className="h-4 w-4" />
+          )}
+          Continue as guest
+        </Button>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
           <Link

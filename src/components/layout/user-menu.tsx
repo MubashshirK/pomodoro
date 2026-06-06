@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { UpdateNameDialog } from "@/components/layout/update-name-dialog";
+import { ChangePasswordDialog } from "@/components/layout/change-password-dialog";
+import { DeleteAccountDialog } from "@/components/layout/delete-account-dialog";
 
 export function UserMenu({
   name,
@@ -43,9 +46,23 @@ export function UserMenu({
             ) : null}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => signOut({ callbackUrl: "/sign-in" })}>
+          <DropdownMenuItem asChild>
+            <UpdateNameDialog currentName={name} email={email} />
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <ChangePasswordDialog />
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onSelect={() => signOut({ callbackUrl: "/sign-in" })}
+            className="text-destructive focus:text-destructive"
+          >
             <LogOut className="mr-2 h-4 w-4" />
             Sign out
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <DeleteAccountDialog />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -84,9 +101,23 @@ export function UserMenu({
           ) : null}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={() => signOut({ callbackUrl: "/sign-in" })}>
+        <DropdownMenuItem asChild>
+          <UpdateNameDialog currentName={name} email={email} />
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <ChangePasswordDialog />
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onSelect={() => signOut({ callbackUrl: "/sign-in" })}
+          className="text-destructive focus:text-destructive"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Sign out
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <DeleteAccountDialog />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

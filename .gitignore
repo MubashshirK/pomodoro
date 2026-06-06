@@ -47,3 +47,5 @@ public/swe-worker*
 
 # Old Vite frontend (kept locally for reference)
 .old-frontend/
+
+.vercel

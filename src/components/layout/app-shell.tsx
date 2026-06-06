@@ -77,13 +77,13 @@ export function AppShell({
           <div
             className={cn("shrink-0 p-2", collapsed && "flex justify-center px-2")}
           >
-            <UserMenu name={session?.user?.name} email={session?.user?.email} expanded={!collapsed} />
+            <ThemeToggle expanded={!collapsed} />
           </div>
           <Separator />
           <div
             className={cn("shrink-0 p-2", collapsed && "flex justify-center px-2")}
           >
-            <ThemeToggle expanded={!collapsed} />
+            <UserMenu name={session?.user?.name} email={session?.user?.email} expanded={!collapsed} />
           </div>
           <Separator />
           <div
@@ -152,6 +152,10 @@ export function AppShell({
         <Separator />
         <div className="shrink-0 p-2">
           <ThemeToggle expanded />
+        </div>
+        <Separator />
+        <div className="shrink-0 p-2">
+          <UserMenu name={session?.user?.name} email={session?.user?.email} expanded />
         </div>
       </SheetContent>
     </Sheet>
