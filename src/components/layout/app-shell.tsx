@@ -108,7 +108,7 @@ export function AppShell({
               ) : (
                 <>
                   <PanelLeftClose className="h-4 w-4 shrink-0" />
-                  <span>Collapse</span>
+                  <span>Collapse Menu</span>
                 </>
               )}
             </Button>
