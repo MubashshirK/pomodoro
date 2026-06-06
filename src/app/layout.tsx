@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { SerwistProvider } from "@serwist/turbopack/react";
 import "./globals.css";
@@ -7,13 +7,6 @@ import "./globals.css";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -67,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
       <body className="min-h-full antialiased">
         <SerwistProvider swUrl="/serwist/sw.js">
           <Providers>{children}</Providers>
