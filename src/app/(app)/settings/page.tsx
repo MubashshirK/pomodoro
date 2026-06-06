@@ -134,7 +134,7 @@ export default function SettingsPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <h1 className="mt-4 text-3xl font-semibold tracking-tight">Settings</h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="whitespace-nowrap text-sm text-muted-foreground">
             Durations, sound, and notifications.
           </p>
         </div>
