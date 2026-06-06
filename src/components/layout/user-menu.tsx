@@ -19,10 +19,12 @@ import { DeleteAccountDialog } from "@/components/layout/delete-account-dialog";
 export function UserMenu({
   name,
   email,
+  isGuest,
   expanded,
 }: {
   name?: string | null;
   email?: string | null;
+  isGuest?: boolean;
   expanded: boolean;
 }) {
   if (!expanded) {
@@ -40,7 +42,9 @@ export function UserMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="right" sideOffset={8} className="w-56">
           <DropdownMenuLabel className="font-normal">
-            <p className="text-sm font-medium">{name || "Account"}</p>
+            <p className="text-sm font-medium">
+              {name || (isGuest ? "Guest" : "Account")}
+            </p>
             {email ? (
               <p className="truncate text-xs text-muted-foreground">{email}</p>
             ) : null}
@@ -49,9 +53,11 @@ export function UserMenu({
           <DropdownMenuItem asChild>
             <UpdateNameDialog currentName={name} email={email} />
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <ChangePasswordDialog />
-          </DropdownMenuItem>
+          {isGuest ? null : (
+            <DropdownMenuItem asChild>
+              <ChangePasswordDialog />
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => signOut({ callbackUrl: "/sign-in" })}
@@ -85,7 +91,7 @@ export function UserMenu({
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">
-              {name || "Account"}
+              {name || (isGuest ? "Guest" : "Account")}
             </p>
             {email ? (
               <p className="truncate text-xs text-muted-foreground">{email}</p>
@@ -95,7 +101,9 @@ export function UserMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" side="top" className="w-56">
         <DropdownMenuLabel className="font-normal">
-          <p className="text-sm font-medium">{name || "Account"}</p>
+          <p className="text-sm font-medium">
+            {name || (isGuest ? "Guest" : "Account")}
+          </p>
           {email ? (
             <p className="truncate text-xs text-muted-foreground">{email}</p>
           ) : null}
@@ -104,9 +112,11 @@ export function UserMenu({
         <DropdownMenuItem asChild>
           <UpdateNameDialog currentName={name} email={email} />
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <ChangePasswordDialog />
-        </DropdownMenuItem>
+        {isGuest ? null : (
+          <DropdownMenuItem asChild>
+            <ChangePasswordDialog />
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onSelect={() => signOut({ callbackUrl: "/sign-in" })}

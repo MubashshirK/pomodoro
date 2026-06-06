@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Keyboard, Coffee, Flame, Repeat } from "lucide-react";
@@ -25,6 +25,11 @@ export default function TimerPage() {
   const { data: stats } = useStats("day");
   const streak = stats?.current_streak ?? 0;
 
+  const notifPermMutateRef = useRef(notifPerm.mutate);
+  useEffect(() => {
+    notifPermMutateRef.current = notifPerm.mutate;
+  }, [notifPerm.mutate]);
+
   useEffect(() => {
     if (
       status === "running" &&
@@ -32,9 +37,9 @@ export default function TimerPage() {
       typeof Notification !== "undefined" &&
       Notification.permission === "default"
     ) {
-      notifPerm.mutate();
+      notifPermMutateRef.current();
     }
-  }, [status, settings?.notifications_enabled, notifPerm]);
+  }, [status, settings?.notifications_enabled]);
 
   const cyclesLimit = settings?.cycles_until_long_break ?? 4;
   const cycleNumber =

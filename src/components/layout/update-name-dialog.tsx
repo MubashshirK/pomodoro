@@ -52,7 +52,7 @@ export function UpdateNameDialog({
       }
       toast.success("Name updated");
       setOpen(false);
-      void update({ user: { name: next } });
+      await update({ user: { name: next } });
       router.refresh();
     } finally {
       setSubmitting(false);

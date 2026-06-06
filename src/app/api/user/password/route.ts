@@ -30,10 +30,16 @@ export async function PATCH(req: Request) {
 
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
-    select: { passwordHash: true },
+    select: { passwordHash: true, isGuest: true },
   });
   if (!dbUser) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+  if (dbUser.isGuest) {
+    return NextResponse.json(
+      { error: "Guest accounts cannot change their password" },
+      { status: 403 },
+    );
   }
 
   const ok = await bcrypt.compare(parsed.data.currentPassword, dbUser.passwordHash);
