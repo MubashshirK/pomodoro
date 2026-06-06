@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, ChevronDown, X, Target, ListTodo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -54,93 +55,120 @@ export function ActiveTaskCard() {
     setOpen(false);
   };
 
-  if (!activeTask) {
-    return (
-      <div className="rounded-xl border border-dashed bg-muted/30 p-4">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Target className="h-4 w-4" />
-            <span>No active task</span>
-          </div>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button size="sm" variant="outline" className="gap-1">
-                <ListTodo className="h-3.5 w-3.5" />
-                Choose
-                <ChevronDown className="h-3.5 w-3.5" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-72 p-0">
-              <TaskList tasks={tasks} onPick={setPick} />
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-    );
-  }
-
-  const pct = Math.min(
-    100,
-    Math.round(
-      (activeTask.completed_pomodoros /
-        Math.max(1, activeTask.estimated_pomodoros)) *
+  const pct = activeTask
+    ? Math.min(
         100,
-    ),
-  );
-  const done = activeTask.completed_pomodoros >= activeTask.estimated_pomodoros;
+        Math.round(
+          (activeTask.completed_pomodoros /
+            Math.max(1, activeTask.estimated_pomodoros)) *
+            100,
+        ),
+      )
+    : 0;
+  const done =
+    !!activeTask &&
+    activeTask.completed_pomodoros >= activeTask.estimated_pomodoros;
 
   return (
-    <div
-      className={cn(
-        "rounded-xl border bg-card p-4",
-        done && "border-emerald-500/40 bg-emerald-500/5",
-      )}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-2">
-          {done ? (
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
-          ) : (
-            <Target className="h-4 w-4 shrink-0 text-work" />
+    <AnimatePresence mode="wait" initial={false}>
+      {!activeTask ? (
+        <motion.div
+          key="empty"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="rounded-xl border border-dashed bg-muted/30 p-4"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Target className="h-4 w-4" />
+              <span>No active task</span>
+            </div>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button size="sm" variant="outline" className="gap-1">
+                  <ListTodo className="h-3.5 w-3.5" />
+                  Choose
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-72 p-0">
+                <TaskList tasks={tasks} onPick={setPick} />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </motion.div>
+      ) : (
+        <motion.div
+          key="active"
+          layout
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className={cn(
+            "rounded-xl border bg-card p-4",
+            done && "border-emerald-500/40 bg-emerald-500/5",
           )}
-          <span className="truncate text-sm font-medium">{activeTask.title}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button size="sm" variant="ghost" className="gap-1">
-                Change
-                <ChevronDown className="h-3.5 w-3.5" />
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              {done ? (
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+              ) : (
+                <Target className="h-4 w-4 shrink-0 text-work" />
+              )}
+              <span className="truncate text-sm font-medium">
+                {activeTask.title}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button size="sm" variant="ghost" className="gap-1">
+                    Change
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-72 p-0">
+                  <TaskList
+                    tasks={tasks}
+                    currentId={activeTask.id}
+                    onPick={setPick}
+                  />
+                </PopoverContent>
+              </Popover>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => setActiveTask(null)}
+                aria-label="Clear active task"
+              >
+                <X className="h-4 w-4" />
               </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-72 p-0">
-              <TaskList tasks={tasks} currentId={activeTask.id} onPick={setPick} />
-            </PopoverContent>
-          </Popover>
-          <Button
-            size="icon"
-            variant="ghost"
-            onClick={() => setActiveTask(null)}
-            aria-label="Clear active task"
+            </div>
+          </div>
+          <motion.div
+            className="mt-3 space-y-1.5"
+            initial={false}
+            animate={{ opacity: 1 }}
           >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-      <div className="mt-3 space-y-1.5">
-        <Progress value={pct} className="h-1.5" />
-        <p className="text-xs text-muted-foreground">
-          <span className="font-mono tabular-nums">
-            {activeTask.completed_pomodoros}
-          </span>{" "}
-          of{" "}
-          <span className="font-mono tabular-nums">
-            {activeTask.estimated_pomodoros}
-          </span>{" "}
-          pomodoros
-        </p>
-      </div>
-    </div>
+            <Progress value={pct} className="h-1.5" />
+            <p className="text-xs text-muted-foreground">
+              <span className="font-mono tabular-nums">
+                {activeTask.completed_pomodoros}
+              </span>{" "}
+              of{" "}
+              <span className="font-mono tabular-nums">
+                {activeTask.estimated_pomodoros}
+              </span>{" "}
+              pomodoros
+            </p>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
