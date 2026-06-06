@@ -25,7 +25,7 @@ export default function StatsPage() {
             Your focus, broken down.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2">
           {isFetching ? (
             <span className="text-xs text-muted-foreground">Refreshing…</span>
           ) : null}

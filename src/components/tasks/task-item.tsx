@@ -136,8 +136,8 @@ export function TaskItem({
           </p>
         )}
         <div className="mt-1.5 flex items-center gap-2">
-          <Progress value={pct} className="h-1 max-w-32" />
-          <span className="text-xs text-muted-foreground">
+          <Progress value={pct} className="h-1 w-20 shrink-0 sm:w-32" />
+          <span className="shrink-0 text-xs text-muted-foreground">
             {task.completed_pomodoros} / {task.estimated_pomodoros}
           </span>
         </div>

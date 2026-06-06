@@ -92,7 +92,7 @@ export default function TasksPage() {
             Plan your work, one pomodoro at a time.
           </p>
         </div>
-        <Button onClick={openCreate} className="gap-1">
+        <Button onClick={openCreate} className="ml-auto gap-1">
           <Plus className="h-4 w-4" />
           New task
         </Button>

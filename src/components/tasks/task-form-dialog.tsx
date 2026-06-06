@@ -80,7 +80,7 @@ export function TaskFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-h-[90vh] overflow-y-auto p-5 sm:max-w-md sm:p-6">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit task" : "New task"}</DialogTitle>
           <DialogDescription>
