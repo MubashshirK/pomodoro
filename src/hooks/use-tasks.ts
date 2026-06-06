@@ -77,11 +77,30 @@ export function useReorderTasks() {
   return useMutation({
     mutationFn: (order: number[]) =>
       api.post<{ message: string }>("/api/tasks/reorder", { order }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: taskKeys.all });
+    onMutate: async (order) => {
+      await qc.cancelQueries({ queryKey: taskKeys.list() });
+      const previous = qc.getQueryData<{ tasks: Task[] }>(taskKeys.list());
+      if (previous) {
+        const byId = new Map(previous.tasks.map((t) => [t.id, t]));
+        const reordered = order
+          .map((id, idx) => {
+            const t = byId.get(id);
+            return t ? { ...t, position: idx + 1 } : undefined;
+          })
+          .filter((t): t is Task => t !== undefined);
+        if (reordered.length === previous.tasks.length) {
+          qc.setQueryData(taskKeys.list(), { tasks: reordered });
+        }
+      }
+      return { previous };
     },
-    onError: (err) => {
+    onError: (err, _vars, context) => {
+      if (context?.previous) {
+        qc.setQueryData(taskKeys.list(), context.previous);
+      }
       toast.error(err instanceof Error ? err.message : "Could not reorder tasks");
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: taskKeys.all });
     },
   });
