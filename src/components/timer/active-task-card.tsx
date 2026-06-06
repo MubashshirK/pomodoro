@@ -10,7 +10,6 @@ import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTasks } from "@/hooks/use-tasks";
 import { useTimerStore } from "@/store/timer-store";
-import { pluralize } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Task } from "@/types";
 
