@@ -92,6 +92,7 @@ function SignInForm() {
               id="email"
               type="email"
               autoComplete="email"
+              autoFocus
               placeholder="you@example.com"
               required
               value={email}

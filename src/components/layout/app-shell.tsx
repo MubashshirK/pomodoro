@@ -60,7 +60,7 @@ export function AppShell({
             href="/timer"
             onClick={() => setMobileOpen(false)}
             className={cn(
-              "flex shrink-0 items-center gap-2 rounded-md px-5 py-3 font-semibold tracking-tight transition-colors hover:bg-sidebar-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "flex shrink-0 items-center gap-2 rounded-md px-5 py-3 font-semibold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               collapsed && "justify-center px-0",
             )}
             title={collapsed ? "Pomodoro Pro" : undefined}
@@ -120,7 +120,7 @@ export function AppShell({
             <Link
               href="/timer"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 rounded-md px-1 py-1 transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex items-center gap-2 rounded-md px-1 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Pomodoro Pro — go to timer"
             >
               <Timer className="h-7 w-7 shrink-0 text-work" />
@@ -153,7 +153,7 @@ export function AppShell({
             <Link
               href="/timer"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 rounded-md transition-colors hover:bg-sidebar-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Pomodoro Pro — go to timer"
             >
               <Timer className="mt-0.5 h-6 w-6 text-work" />

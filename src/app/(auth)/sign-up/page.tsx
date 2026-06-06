@@ -79,6 +79,7 @@ export default function SignUpPage() {
               id="name"
               type="text"
               autoComplete="name"
+              autoFocus
               placeholder="What should we call you?"
               value={name}
               onChange={(e) => setName(e.target.value)}
