@@ -26,13 +26,10 @@ export function ActiveTaskCard() {
     if (!activeTask) return;
     const fresh = data?.tasks.find((t) => t.id === activeTask.id);
     if (!fresh) return;
-    if (fresh.is_completed) {
-      const t = setTimeout(() => setActiveTask(null), 2000);
-      return () => clearTimeout(t);
-    }
     if (
       fresh.completed_pomodoros !== activeTask.completed_pomodoros ||
-      fresh.estimated_pomodoros !== activeTask.estimated_pomodoros
+      fresh.estimated_pomodoros !== activeTask.estimated_pomodoros ||
+      fresh.is_completed !== activeTask.is_completed
     ) {
       setActiveTask({
         id: fresh.id,
@@ -41,6 +38,10 @@ export function ActiveTaskCard() {
         completed_pomodoros: fresh.completed_pomodoros,
         is_completed: fresh.is_completed,
       });
+    }
+    if (fresh.is_completed) {
+      const t = setTimeout(() => setActiveTask(null), 2000);
+      return () => clearTimeout(t);
     }
   }, [data, activeTask, setActiveTask]);
 
