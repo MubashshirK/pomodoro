@@ -70,7 +70,9 @@ export function TaskItem({
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
-    transition: isDragging ? undefined : "transform 200ms ease",
+    transition: isDragging
+      ? undefined
+      : "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
     opacity: isDragging ? 0.6 : 1,
     zIndex: isDragging ? 50 : undefined,
   };
