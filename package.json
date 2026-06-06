@@ -40,6 +40,7 @@
     "date-fns": "^4.4.0",
     "dseg": "^0.46.0",
     "framer-motion": "^11.18.2",
+    "geist": "^1.7.2",
     "lucide-react": "^0.460.0",
     "next": "16.2.7",
     "next-auth": "5.0.0-beta.31",
