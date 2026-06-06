@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+
+  tasks    Task[]
+  sessions PomodoroSessionLog[]
+  settings AppSettings?
+}
+
+model Task {
+  id                 Int      @id @default(autoincrement())
+  userId             Int
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title              String
+  notes              String?
+  estimatedPomodoros Int      @default(1)
+  completedPomodoros Int      @default(0)
+  isCompleted        Boolean  @default(false)
+  position           Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  sessions PomodoroSessionLog[]
+
+  @@index([userId, position])
+}
+
+model PomodoroSessionLog {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId          Int?
+  task            Task?    @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  sessionType     String
+  durationSeconds Int
+  completedAt     DateTime @default(now())
+
+  @@index([userId, completedAt])
+}
+
+model AppSettings {
+  id                   Int      @id @default(autoincrement())
+  userId               Int      @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workDuration         Int      @default(25)
+  shortBreakDuration   Int      @default(5)
+  longBreakDuration    Int      @default(15)
+  cyclesUntilLongBreak Int      @default(4)
+  autoStart            Boolean  @default(false)
+  soundEnabled         Boolean  @default(true)
+  volume               Int      @default(80)
+  theme                String   @default("system")
+  notificationsEnabled Boolean  @default(true)
+  updatedAt            DateTime @updatedAt
+}

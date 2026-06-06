@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { localData } from "@/lib/local-data";
+import { api } from "@/lib/api-client";
 import type { AppSettings } from "@/types";
 
 export const settingsKeys = {
@@ -10,8 +10,8 @@ export const settingsKeys = {
 export function useSettings() {
   return useQuery({
     queryKey: settingsKeys.all,
-    queryFn: () => ({ settings: localData.getSettings() }),
-    staleTime: Infinity,
+    queryFn: () => api.get<{ settings: AppSettings }>("/api/settings"),
+    staleTime: 30_000,
   });
 }
 
@@ -27,10 +27,10 @@ function getErrorMessage(err: unknown, fallback = "Something went wrong"): strin
 export function useUpdateSettings() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (patch: SettingsPatch) => {
-      const { _silent, ...rest } = patch;
+    mutationFn: (patch: SettingsPatch) => {
+      const { _silent: _silent, ...rest } = patch;
       void _silent;
-      return { settings: localData.updateSettings(rest) };
+      return api.patch<{ settings: AppSettings }>("/api/settings", rest);
     },
     onSuccess: (data, patch) => {
       qc.setQueryData(settingsKeys.all, data);

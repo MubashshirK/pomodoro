@@ -1,9 +1,16 @@
-import { useContext } from "react";
-import { ThemeProviderContext } from "@/components/theme-context";
+"use client";
 
-export const useTheme = () => {
-  const ctx = useContext(ThemeProviderContext);
-  if (ctx === undefined)
-    throw new Error("useTheme must be used within a ThemeProvider");
-  return ctx;
-};
+import { useTheme as useNextTheme } from "next-themes";
+
+export type Theme = "dark" | "light" | "system";
+
+export function useTheme() {
+  const { theme, setTheme, resolvedTheme } = useNextTheme();
+  return {
+    theme: (theme ?? "system") as Theme,
+    resolvedTheme: (resolvedTheme ?? "light") as "dark" | "light",
+    setTheme: (next: Theme) => {
+      setTheme(next);
+    },
+  };
+}

@@ -1,5 +1,6 @@
-import { useTheme } from "@/hooks/use-theme";
-import { useUpdateSettings } from "@/hooks/use-settings";
+"use client";
+
+import { useTheme, type Theme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import { Monitor, Moon, Sun } from "lucide-react";
 import {
@@ -9,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import type { Theme } from "@/components/theme-context";
 
 interface ThemeToggleProps {
   expanded?: boolean;
@@ -23,12 +23,6 @@ const themeOptions: { value: Theme; label: string; Icon: typeof Sun }[] = [
 
 export function ThemeToggle({ expanded = false }: ThemeToggleProps) {
   const { theme, setTheme } = useTheme();
-  const updateSettings = useUpdateSettings();
-
-  function pick(t: Theme) {
-    setTheme(t);
-    updateSettings.mutate({ theme: t });
-  }
 
   const current = themeOptions.find((t) => t.value === theme) ?? themeOptions[2];
   const CurrentIcon = current.Icon;
@@ -49,7 +43,7 @@ export function ThemeToggle({ expanded = false }: ThemeToggleProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="right" sideOffset={8} className="w-40">
           {themeOptions.map(({ value, label, Icon }) => (
-            <DropdownMenuItem key={value} onSelect={() => pick(value)}>
+            <DropdownMenuItem key={value} onSelect={() => setTheme(value)}>
               <Icon className="mr-2 h-4 w-4" />
               {label}
               {theme === value && <span className="ml-auto text-xs">✓</span>}
@@ -74,7 +68,7 @@ export function ThemeToggle({ expanded = false }: ThemeToggleProps) {
             type="button"
             role="radio"
             aria-checked={active}
-            onClick={() => pick(value)}
+            onClick={() => setTheme(value)}
             title={label}
             className={cn(
               "flex flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-all",

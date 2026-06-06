@@ -1,13 +1,16 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
 import {
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
   Timer,
 } from "lucide-react";
+import type { Session } from "next-auth";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { UserMenu } from "@/components/layout/user-menu";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -23,7 +26,13 @@ const STORAGE_KEY = "sidebar-collapsed";
 const EXPANDED = 240;
 const COLLAPSED = 64;
 
-export function AppShell() {
+export function AppShell({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session?: Session | null;
+}) {
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     return localStorage.getItem(STORAGE_KEY) === "1";
@@ -55,7 +64,9 @@ export function AppShell() {
           >
             <div className="flex items-center gap-2">
               <Timer className="h-7 w-7 shrink-0 text-work" />
-              {!collapsed ? <span className="truncate text-lg">Pomodoro Pro</span> : null}
+              {!collapsed ? (
+                <span className="truncate text-lg">Pomodoro Pro</span>
+              ) : null}
             </div>
           </div>
           <Separator />
@@ -66,14 +77,17 @@ export function AppShell() {
           <div
             className={cn("shrink-0 p-2", collapsed && "flex justify-center px-2")}
           >
+            <UserMenu name={session?.user?.name} email={session?.user?.email} expanded={!collapsed} />
+          </div>
+          <Separator />
+          <div
+            className={cn("shrink-0 p-2", collapsed && "flex justify-center px-2")}
+          >
             <ThemeToggle expanded={!collapsed} />
           </div>
           <Separator />
           <div
-            className={cn(
-              "shrink-0 p-2",
-              collapsed && "flex justify-center",
-            )}
+            className={cn("shrink-0 p-2", collapsed && "flex justify-center")}
           >
             <Button
               variant="ghost"
@@ -118,7 +132,7 @@ export function AppShell() {
           </header>
           <main className="flex-1 overflow-y-auto bg-background">
             <div className="mx-auto flex h-full w-full max-w-5xl flex-col px-4 pt-10 pb-4 sm:px-6 sm:py-6">
-              <Outlet />
+              {children}
             </div>
           </main>
         </div>

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { localData } from "@/lib/local-data";
-import type { SessionType, Task } from "@/types";
+import { api } from "@/lib/api-client";
+import type { PomodoroSessionLog, SessionType } from "@/types";
 import { taskKeys } from "@/hooks/use-tasks";
 
 type LogSessionInput = {
@@ -12,12 +12,11 @@ type LogSessionInput = {
 export function useLogSession() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (input: LogSessionInput) => localData.logSession(input),
+    mutationFn: (input: LogSessionInput) =>
+      api.post<{ session: PomodoroSessionLog }>("/api/sessions", input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: taskKeys.all });
       qc.invalidateQueries({ queryKey: ["stats"] });
     },
   });
 }
-
-export type { LogSessionInput, Task };

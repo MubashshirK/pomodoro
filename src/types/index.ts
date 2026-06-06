@@ -1,12 +1,5 @@
 export type SessionType = "work" | "shortBreak" | "longBreak";
 
-export type User = {
-  id: number;
-  email: string;
-  name: string | null;
-  created_at: string;
-};
-
 export type Task = {
   id: number;
   title: string;

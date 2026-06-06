@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useMutation } from "@tanstack/react-query";
-import TimerWorker from "@/lib/timer-worker?worker";
 import { useTimerStore, durationFor, sessionLabel } from "@/store/timer-store";
 import { soundManager } from "@/lib/sound";
 import { useSettings } from "@/hooks/use-settings";
@@ -187,7 +186,10 @@ export function useTimer() {
 
   // Create worker once
   useEffect(() => {
-    const w = new TimerWorker();
+    const w = new Worker(
+      new URL("../lib/timer-worker.ts", import.meta.url),
+      { type: "module" },
+    );
     workerRef.current = w;
     w.addEventListener("message", (e: MessageEvent<WorkerMsg>) => {
       const msg = e.data;

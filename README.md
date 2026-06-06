@@ -1,51 +1,36 @@
-# Pomodoro Pro
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A modern Pomodoro web app with task management, statistics, and
-dark/light mode. CS50 Final Project.
+## Getting Started
 
-## Stack
-
-- **Frontend** — Vite 8 + React 19 + TypeScript 6 + Tailwind v3 + shadcn/ui (18 primitives) + Zustand + TanStack Query + next-themes + framer-motion + lucide-react + Recharts + sonner + @dnd-kit + vite-plugin-pwa
-- **Storage** — Browser `localStorage` (no backend)
-- **PWA** — installable, offline-capable
-
-## Quick Start (development)
+First, run the development server:
 
 ```bash
-npm install
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Open <http://localhost:5173>. All data is stored locally in your browser.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Scripts
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-- `npm run dev` — Vite dev server with HMR
-- `npm run build` — typecheck (`tsc -b`) + production build to `dist/`
-- `npm run preview` — preview the production build
-- `npm run lint` — ESLint
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Build & Deploy
+## Learn More
 
-```bash
-npm install
-npm run build
-```
+To learn more about Next.js, take a look at the following resources:
 
-The production build lands in `dist/` and is a static bundle you can serve
-from any static host (Vercel, Netlify, GitHub Pages, S3, etc.). No backend
-or environment variables required.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Features
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-- **Timer** — drift-free Web Worker countdown, work / short break / long break cycles, auto-start, browser notifications, sound effects, keyboard shortcuts (`Space` play/pause, `R` reset, `S` skip, `1/2/3` switch session).
-- **Tasks** — create, edit, delete, drag-to-reorder, filter (all/active/completed), pin a task to the active timer card.
-- **Stats** — Today / 7 days / 30 days. Pomodoros, focus time, session breakdown, daily bar chart, session-type donut, top-5 task leaderboard, current streak.
-- **Settings** — work/short/long break durations, cycle length, auto-start, sound + volume, theme (light/dark/system), browser notifications.
-- **PWA** — installable, offline-capable via service worker, with maskable + apple-touch icons.
-- **Theme** — system / light / dark with persisted preference.
+## Deploy on Vercel
 
-## Data
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-All data (tasks, sessions, settings) lives in `localStorage` under the
-key `pomodoro-local-data-v1`. Clearing site data resets the app.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
