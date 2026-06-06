@@ -33,7 +33,9 @@ export function StatCard({ icon: Icon, label, value, hint, tone = "default" }: P
           <p className="text-xs uppercase tracking-wide text-muted-foreground">
             {label}
           </p>
-          <p className="truncate text-2xl font-semibold tabular-nums">{value}</p>
+          <p className="truncate font-mono text-2xl font-semibold tabular-nums">
+            {value}
+          </p>
           {hint ? (
             <p className="text-xs text-muted-foreground">{hint}</p>
           ) : null}

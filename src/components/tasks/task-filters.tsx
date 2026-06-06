@@ -17,7 +17,7 @@ export function TaskFilters({ value, onChange, counts }: Props) {
           <TabsTrigger key={k} value={k} className="gap-1.5">
             <span
               className={cn(
-                "rounded-full px-1.5 text-[10px] tabular-nums",
+                "rounded-full px-1.5 font-mono text-[10px] tabular-nums",
                 value === k
                   ? "bg-foreground/10 text-foreground"
                   : "bg-muted text-muted-foreground",

@@ -28,7 +28,7 @@ export function StreakCard({ streak }: Props) {
           <p className="text-xs uppercase tracking-wide text-muted-foreground">
             Current streak
           </p>
-          <p className="text-2xl font-semibold tabular-nums">{streak}</p>
+          <p className="font-mono text-2xl font-semibold tabular-nums">{streak}</p>
           <p className="text-xs text-muted-foreground">{label}</p>
         </div>
       </CardContent>

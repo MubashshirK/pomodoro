@@ -157,6 +157,12 @@ export function AppShell({
         <div className="shrink-0 p-2">
           <UserMenu name={session?.user?.name} email={session?.user?.email} isGuest={session?.user?.isGuest} expanded />
         </div>
+        <Separator />
+        <div className="shrink-0 px-4 py-3 text-center text-xs text-muted-foreground">
+          <p>CS50 Final Project</p>
+          <p className="mt-0.5">Next.js 16 · React 19</p>
+          <p className="mt-1 font-mono tabular-nums">v0.2.0</p>
+        </div>
       </SheetContent>
     </Sheet>
   );

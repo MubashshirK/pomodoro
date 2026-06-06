@@ -106,7 +106,7 @@ export function SessionTypePie({ byType }: Props) {
                 style={{ background: entry.color }}
               />
               <span className="text-muted-foreground">{entry.name}</span>
-              <span className="font-medium tabular-nums">{pct}%</span>
+              <span className="font-mono font-medium tabular-nums">{pct}%</span>
             </li>
           );
         })}

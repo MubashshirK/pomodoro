@@ -131,8 +131,14 @@ export function ActiveTaskCard() {
       <div className="mt-3 space-y-1.5">
         <Progress value={pct} className="h-1.5" />
         <p className="text-xs text-muted-foreground">
-          {pluralize(activeTask.completed_pomodoros, "pomodoro")} of{" "}
-          {pluralize(activeTask.estimated_pomodoros, "estimated")}
+          <span className="font-mono tabular-nums">
+            {activeTask.completed_pomodoros}
+          </span>{" "}
+          of{" "}
+          <span className="font-mono tabular-nums">
+            {activeTask.estimated_pomodoros}
+          </span>{" "}
+          pomodoros
         </p>
       </div>
     </div>

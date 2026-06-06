@@ -30,7 +30,7 @@ export function TaskLeaderboard({ tasks }: Props) {
                 <li key={task.id} className="space-y-1.5">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex min-w-0 items-center gap-2">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium tabular-nums">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-xs font-medium tabular-nums">
                         {idx + 1}
                       </span>
                       <span
@@ -46,7 +46,7 @@ export function TaskLeaderboard({ tasks }: Props) {
                         <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-work" />
                       ) : null}
                     </div>
-                    <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
+                    <span className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
                       {task.completed_pomodoros}/{task.estimated_pomodoros}
                     </span>
                   </div>

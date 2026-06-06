@@ -75,13 +75,19 @@ export default function TimerPage() {
             }
           >
             <Flame className="h-3 w-3 shrink-0" />
-            <span className="tabular-nums">
-              {streak} {streak === 1 ? "day" : "days"}
+            <span>
+              <span className="font-mono tabular-nums">{streak}</span>{" "}
+              {streak === 1 ? "day" : "days"}
             </span>
           </Badge>
           <Badge variant="secondary" className="gap-1.5">
             <Repeat className="h-3 w-3" />
-            Cycle {cycleNumber} / {cyclesLimit}
+            <span>
+              Cycle{" "}
+              <span className="font-mono tabular-nums">
+                {cycleNumber} / {cyclesLimit}
+              </span>
+            </span>
           </Badge>
         </div>
       </div>

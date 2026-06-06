@@ -220,7 +220,7 @@ export default function SettingsPage() {
               <Label htmlFor="cycles_until_long_break">
                 Cycles until long break
               </Label>
-              <span className="text-sm tabular-nums text-muted-foreground">
+              <span className="font-mono text-sm tabular-nums text-muted-foreground">
                 {form.watch("cycles_until_long_break")}
               </span>
             </div>
@@ -299,7 +299,7 @@ export default function SettingsPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="volume">Volume</Label>
-              <span className="text-sm tabular-nums text-muted-foreground">
+              <span className="font-mono text-sm tabular-nums text-muted-foreground">
                 {form.watch("volume")}%
               </span>
             </div>
@@ -364,7 +364,7 @@ export default function SettingsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
-          <p className="flex items-center gap-1.5">
+          <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
             <span>Designed, built, and shipped with</span>
             <Heart className="h-3.5 w-3.5 fill-rose-500 text-rose-500" />
             <span>by</span>
@@ -406,8 +406,8 @@ function DurationField({
         <span
           className={
             accent
-              ? `text-sm tabular-nums text-${accent}`
-              : "text-sm tabular-nums text-muted-foreground"
+              ? `font-mono text-sm tabular-nums text-${accent}`
+              : "font-mono text-sm tabular-nums text-muted-foreground"
           }
         >
           {humanizeMinutes(value)}
