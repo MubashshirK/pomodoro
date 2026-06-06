@@ -68,7 +68,7 @@ export default function TimerPage() {
       <div className="flex flex-wrap items-start justify-between gap-2 sm:gap-3">
         <div className="min-w-0 flex-1">
           <h1 className="mt-4 text-3xl font-semibold tracking-tight">Timer</h1>
-          <p className="truncate text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Focus, take a break, repeat.
           </p>
         </div>
