@@ -170,11 +170,11 @@ export function AppShell({
           <ThemeToggle expanded />
         </div>
         <Separator />
-        <div className="shrink-0 px-2 py-0.5">
+        <div className="shrink-0 px-2">
           <UserMenu name={session?.user?.name} email={session?.user?.email} isGuest={session?.user?.isGuest} expanded />
         </div>
         <Separator />
-        <div className="shrink-0 px-4 py-1 text-center text-[11px] text-muted-foreground">
+        <div className="shrink-0 px-4 py-0.5 text-center text-[10px] text-muted-foreground">
           <span>Built by — Mubashshir Khan</span>
         </div>
       </SheetContent>

@@ -50,10 +50,7 @@ export default function TimerPage() {
   }, [status, settings?.notifications_enabled]);
 
   const cyclesLimit = settings?.cycles_until_long_break ?? 4;
-  const cycleNumber =
-    sessionType === "work"
-      ? (completedCycles % cyclesLimit) + 1
-      : completedCycles % cyclesLimit || cyclesLimit;
+  const cycleNumber = (completedCycles % cyclesLimit) + 1;
   const accent = colorVarFor(sessionType);
 
   return (

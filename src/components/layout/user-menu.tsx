@@ -92,10 +92,10 @@ export function UserMenu({
         <button
           type="button"
           aria-label="Account menu"
-          className={cn(
-            "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors",
-            "hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          )}
+            className={cn(
+              "flex w-full items-center gap-2 rounded-md px-2 py-1 text-left text-sm transition-colors",
+              "hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            )}
         >
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-work/15 text-[11px] font-semibold text-work">
             {initials}
