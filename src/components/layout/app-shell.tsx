@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   Menu,
   PanelLeftClose,
@@ -55,12 +56,15 @@ export function AppShell({
           )}
           style={{ width }}
         >
-          <div
+          <Link
+            href="/timer"
+            onClick={() => setMobileOpen(false)}
             className={cn(
-              "flex shrink-0 items-center gap-2 px-5 py-3 font-semibold tracking-tight",
+              "flex shrink-0 items-center gap-2 rounded-md px-5 py-3 font-semibold tracking-tight transition-colors hover:bg-sidebar-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               collapsed && "justify-center px-0",
             )}
             title={collapsed ? "Pomodoro Pro" : undefined}
+            aria-label="Pomodoro Pro — go to timer"
           >
             <div className="flex items-center gap-2">
               <Timer className="h-7 w-7 shrink-0 text-work" />
@@ -68,7 +72,7 @@ export function AppShell({
                 <span className="truncate text-lg">Pomodoro Pro</span>
               ) : null}
             </div>
-          </div>
+          </Link>
           <Separator />
           <div className="min-h-0 flex-1 overflow-y-auto">
             <SidebarNav collapsed={collapsed} />
@@ -113,12 +117,17 @@ export function AppShell({
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
-            <div className="flex items-center gap-2">
+            <Link
+              href="/timer"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 rounded-md px-1 py-1 transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Pomodoro Pro — go to timer"
+            >
               <Timer className="h-7 w-7 shrink-0 text-work" />
               <span className="mt-0.5 truncate text-xl font-semibold tracking-tight">
                 Pomodoro Pro
               </span>
-            </div>
+            </Link>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
@@ -140,9 +149,16 @@ export function AppShell({
 
       <SheetContent side="right" className="flex w-64 flex-col p-0">
         <SheetHeader className="pb-2 pl-3 pr-5 pt-4">
-          <SheetTitle className="flex items-center gap-2 text-xl">
-            <Timer className="mt-0.5 h-6 w-6 text-work" />
-            <span className="mt-0.5">Pomodoro Pro</span>
+          <SheetTitle className="text-xl">
+            <Link
+              href="/timer"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 rounded-md transition-colors hover:bg-sidebar-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Pomodoro Pro — go to timer"
+            >
+              <Timer className="mt-0.5 h-6 w-6 text-work" />
+              <span className="mt-0.5">Pomodoro Pro</span>
+            </Link>
           </SheetTitle>
         </SheetHeader>
         <Separator />
@@ -154,11 +170,11 @@ export function AppShell({
           <ThemeToggle expanded />
         </div>
         <Separator />
-        <div className="shrink-0 p-2">
+        <div className="shrink-0 px-2 pt-2 pb-1">
           <UserMenu name={session?.user?.name} email={session?.user?.email} isGuest={session?.user?.isGuest} expanded />
         </div>
         <Separator />
-        <div className="shrink-0 px-4 py-2 text-center text-[11px] text-muted-foreground">
+        <div className="shrink-0 px-4 py-1.5 text-center text-[11px] text-muted-foreground">
           <span>Built by — Mubashshir Khan</span>
         </div>
       </SheetContent>

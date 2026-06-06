@@ -131,8 +131,8 @@ export default function TimerPage() {
 
         <ActiveTaskCard />
 
-        <div className="hidden flex-wrap items-center justify-between gap-2 px-1 text-[11px] text-muted-foreground sm:flex">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-[11px] text-muted-foreground">
+          <div className="hidden items-center gap-2 sm:flex">
             <Keyboard className="h-3 w-3" />
             <span>
               <kbd className="rounded border bg-background px-1 py-0.5">Space</kbd>{" "}
