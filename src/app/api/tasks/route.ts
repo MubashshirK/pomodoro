@@ -9,14 +9,6 @@ export const runtime = "nodejs";
 export async function GET() {
   try {
     const user = await requireUser();
-    await prisma.task.updateMany({
-      where: {
-        userId: user.id,
-        isCompleted: false,
-        completedPomodoros: { gte: prisma.task.fields.estimatedPomodoros },
-      },
-      data: { isCompleted: true },
-    });
     const rows = await prisma.task.findMany({
       where: { userId: user.id },
       orderBy: { position: "asc" },

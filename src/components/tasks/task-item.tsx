@@ -2,6 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
   CheckCircle2,
+  Circle,
   GripVertical,
   MoreVertical,
   Pencil,
@@ -116,11 +117,13 @@ export function TaskItem({
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          {isActive ? (
-            <Target className="h-3.5 w-3.5 shrink-0 text-work" />
-          ) : done && !task.is_completed ? (
+          {task.is_completed ? (
             <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
-          ) : null}
+          ) : isActive ? (
+            <Target className="h-3.5 w-3.5 shrink-0 text-work" />
+          ) : (
+            <Circle className="h-3.5 w-3.5 shrink-0 text-muted-foreground/50" />
+          )}
           <span
             className={cn(
               "truncate text-sm font-medium",
