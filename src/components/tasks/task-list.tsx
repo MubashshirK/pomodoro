@@ -1,11 +1,9 @@
-import { useState } from "react";
 import {
   DndContext,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
-  useDndMonitor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -29,15 +27,6 @@ type Props = {
   draggingEnabled: boolean;
 };
 
-function DragStateTracker({ onChange }: { onChange: (dragging: boolean) => void }) {
-  useDndMonitor({
-    onDragStart: () => onChange(true),
-    onDragEnd: () => onChange(false),
-    onDragCancel: () => onChange(false),
-  });
-  return null;
-}
-
 export function TaskList({
   tasks,
   onReorder,
@@ -47,8 +36,6 @@ export function TaskList({
   deletingId,
   draggingEnabled,
 }: Props) {
-  const [isAnyDragging, setIsAnyDragging] = useState(false);
-
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 6 } }),
@@ -77,7 +64,6 @@ export function TaskList({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <DragStateTracker onChange={setIsAnyDragging} />
       <SortableContext
         items={tasks.map((t) => t.id)}
         strategy={verticalListSortingStrategy}
@@ -92,7 +78,6 @@ export function TaskList({
                 onDelete={onDelete}
                 onToggleComplete={onToggleComplete}
                 deleting={deletingId === task.id}
-                isAnyDragging={isAnyDragging}
               />
             </li>
           ))}

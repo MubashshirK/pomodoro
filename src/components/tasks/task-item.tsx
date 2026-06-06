@@ -45,7 +45,6 @@ type Props = {
   onDelete: (task: Task) => Promise<unknown> | unknown;
   onToggleComplete: (task: Task, next: boolean) => void;
   deleting?: boolean;
-  isAnyDragging?: boolean;
 };
 
 export function TaskItem({
@@ -55,7 +54,6 @@ export function TaskItem({
   onDelete,
   onToggleComplete,
   deleting,
-  isAnyDragging,
 }: Props) {
   const activeTask = useTimerStore((s) => s.activeTask);
   const setActiveTask = useTimerStore((s) => s.setActiveTask);
@@ -72,9 +70,7 @@ export function TaskItem({
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
-    transition: isAnyDragging
-      ? undefined
-      : "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+    transition: "none",
     opacity: isDragging ? 0.6 : 1,
     zIndex: isDragging ? 50 : undefined,
   };
