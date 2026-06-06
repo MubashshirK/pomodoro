@@ -147,7 +147,7 @@ export function AppShell({
         </SheetHeader>
         <Separator />
         <div className="min-h-0 flex-1 overflow-y-auto">
-          <SidebarNav onNavigate={() => setMobileOpen(false)} />
+          <SidebarNav onNavigate={() => setMobileOpen(false)} size="lg" />
         </div>
         <Separator />
         <div className="shrink-0 p-2">

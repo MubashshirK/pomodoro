@@ -125,7 +125,7 @@ export default function TimerPage() {
 
         <ActiveTaskCard />
 
-        <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-[11px] text-muted-foreground">
+        <div className="hidden flex-wrap items-center justify-between gap-2 px-1 text-[11px] text-muted-foreground sm:flex">
           <div className="flex items-center gap-2">
             <Keyboard className="h-3 w-3" />
             <span>

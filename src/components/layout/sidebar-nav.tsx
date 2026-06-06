@@ -27,11 +27,14 @@ const items: NavItem[] = [
 export function SidebarNav({
   onNavigate,
   collapsed = false,
+  size = "default",
 }: {
   onNavigate?: () => void;
   collapsed?: boolean;
+  size?: "default" | "lg";
 }) {
   const pathname = usePathname();
+  const isLg = size === "lg";
 
   return (
     <nav className="flex flex-col gap-1 p-3">
@@ -49,14 +52,17 @@ export function SidebarNav({
             title={collapsed ? item.label : undefined}
             aria-label={item.label}
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "flex items-center rounded-lg font-medium transition-colors",
+              isLg
+                ? "gap-3 px-4 py-3 text-base"
+                : "gap-3 px-3 py-2 text-sm",
               collapsed && "justify-center px-0",
               isActive
                 ? "bg-sidebar-accent text-sidebar-foreground"
-                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
           >
-            <Icon className="h-4 w-4 shrink-0" />
+            <Icon className={cn("shrink-0", isLg ? "h-5 w-5" : "h-4 w-4")} />
             {!collapsed ? <span className="truncate">{item.label}</span> : null}
           </Link>
         );

@@ -157,8 +157,11 @@
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  input[type="password"] {
-    letter-spacing: 0.15em;
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
   }
 }
 
