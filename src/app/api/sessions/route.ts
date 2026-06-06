@@ -79,10 +79,24 @@ export async function POST(req: Request) {
         },
       });
       if (session_type === "work" && task_id != null) {
-        await tx.task.update({
+        const updated = await tx.task.update({
           where: { id: task_id },
           data: { completedPomodoros: { increment: 1 } },
+          select: {
+            completedPomodoros: true,
+            estimatedPomodoros: true,
+            isCompleted: true,
+          },
         });
+        if (
+          !updated.isCompleted &&
+          updated.completedPomodoros >= updated.estimatedPomodoros
+        ) {
+          await tx.task.update({
+            where: { id: task_id },
+            data: { isCompleted: true },
+          });
+        }
       }
       return row;
     });
