@@ -70,8 +70,9 @@ export function TaskItem({
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
-    transition: "transform 200ms ease",
+    transition: isDragging ? undefined : "transform 200ms ease",
     opacity: isDragging ? 0.6 : 1,
+    zIndex: isDragging ? 50 : undefined,
   };
 
   const pct = Math.min(
