@@ -65,14 +65,14 @@ export default function TimerPage() {
 
   return (
     <div className="flex h-full flex-col gap-3 sm:gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-2 sm:gap-3">
         <div className="min-w-0 flex-1">
-          <h1 className="text-3xl font-semibold tracking-tight">Timer</h1>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight">Timer</h1>
           <p className="truncate text-sm text-muted-foreground">
             Focus, take a break, repeat.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           <Badge
             variant="secondary"
             className={cn(

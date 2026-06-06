@@ -20,7 +20,7 @@ export default function StatsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Stats</h1>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight">Stats</h1>
           <p className="text-sm text-muted-foreground">
             Your focus, broken down.
           </p>

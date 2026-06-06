@@ -117,7 +117,7 @@ export default function SettingsPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Settings</h1>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight">Settings</h1>
         </div>
         <Card>
           <CardContent className="p-6 text-sm text-destructive">
@@ -133,7 +133,7 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Settings</h1>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight">Settings</h1>
           <p className="text-sm text-muted-foreground">
             Durations, sound, and notifications.
           </p>

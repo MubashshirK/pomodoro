@@ -87,7 +87,7 @@ export default function TasksPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight">Tasks</h1>
           <p className="text-sm text-muted-foreground">
             Plan your work, one pomodoro at a time.
           </p>
