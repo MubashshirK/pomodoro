@@ -79,7 +79,7 @@ export default function TimerPage() {
               {streak} {streak === 1 ? "day" : "days"}
             </span>
           </Badge>
-          <Badge variant="secondary" className="gap-1.5 font-mono">
+          <Badge variant="secondary" className="gap-1.5">
             <Repeat className="h-3 w-3" />
             Cycle {cycleNumber} / {cyclesLimit}
           </Badge>
@@ -129,14 +129,14 @@ export default function TimerPage() {
           <div className="flex items-center gap-2">
             <Keyboard className="h-3 w-3" />
             <span>
-              <kbd className="rounded border bg-background px-1 py-0.5 font-mono">Space</kbd>{" "}
+              <kbd className="rounded border bg-background px-1 py-0.5">Space</kbd>{" "}
               play
             </span>
             <span>
-              <kbd className="rounded border bg-background px-1 py-0.5 font-mono">R</kbd> reset
+              <kbd className="rounded border bg-background px-1 py-0.5">R</kbd> reset
             </span>
             <span>
-              <kbd className="rounded border bg-background px-1 py-0.5 font-mono">S</kbd> skip
+              <kbd className="rounded border bg-background px-1 py-0.5">S</kbd> skip
             </span>
           </div>
           <Link

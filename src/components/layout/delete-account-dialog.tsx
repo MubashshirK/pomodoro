@@ -70,7 +70,7 @@ export function DeleteAccountDialog() {
           </DialogHeader>
           <div className="space-y-2">
             <Label htmlFor="delete-confirm">
-              Type <span className="font-mono font-semibold">{CONFIRM_PHRASE}</span> to confirm
+              Type <span className="font-semibold">{CONFIRM_PHRASE}</span> to confirm
             </Label>
             <Input
               id="delete-confirm"

@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { LogOut, User as UserIcon } from "lucide-react";
+import { LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,11 +10,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UpdateNameDialog } from "@/components/layout/update-name-dialog";
 import { ChangePasswordDialog } from "@/components/layout/change-password-dialog";
 import { DeleteAccountDialog } from "@/components/layout/delete-account-dialog";
+
+function getInitials(name?: string | null, isGuest?: boolean): string {
+  if (isGuest && !name) return "G";
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export function UserMenu({
   name,
@@ -27,24 +35,27 @@ export function UserMenu({
   isGuest?: boolean;
   expanded: boolean;
 }) {
+  const initials = getInitials(name, isGuest);
+  const displayName = name || (isGuest ? "Guest" : "Account");
+
   if (!expanded) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
+          <button
+            type="button"
             aria-label="Account menu"
-            className="h-9 w-9"
+            className={cn(
+              "flex h-9 w-9 items-center justify-center rounded-full bg-work/15 text-xs font-semibold text-work",
+              "transition-colors hover:bg-work/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            )}
           >
-            <UserIcon className="h-4 w-4" />
-          </Button>
+            {initials}
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="right" sideOffset={8} className="w-56">
           <DropdownMenuLabel className="font-normal">
-            <p className="text-sm font-medium">
-              {name || (isGuest ? "Guest" : "Account")}
-            </p>
+            <p className="text-sm font-medium">{displayName}</p>
             {email ? (
               <p className="truncate text-xs text-muted-foreground">{email}</p>
             ) : null}
@@ -86,13 +97,11 @@ export function UserMenu({
             "hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           )}
         >
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-work/15 text-work">
-            <UserIcon className="h-3.5 w-3.5" />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-work/15 text-[11px] font-semibold text-work">
+            {initials}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">
-              {name || (isGuest ? "Guest" : "Account")}
-            </p>
+            <p className="truncate text-sm font-medium">{displayName}</p>
             {email ? (
               <p className="truncate text-xs text-muted-foreground">{email}</p>
             ) : null}
@@ -101,9 +110,7 @@ export function UserMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" side="top" className="w-56">
         <DropdownMenuLabel className="font-normal">
-          <p className="text-sm font-medium">
-            {name || (isGuest ? "Guest" : "Account")}
-          </p>
+          <p className="text-sm font-medium">{displayName}</p>
           {email ? (
             <p className="truncate text-xs text-muted-foreground">{email}</p>
           ) : null}

@@ -10,7 +10,7 @@ export function TimerDisplay({ ms, className }: Props) {
   return (
     <div
       className={cn(
-        "font-mono text-7xl font-semibold tabular-nums tracking-tight",
+        "text-7xl font-semibold tabular-nums tracking-tight",
         className,
       )}
     >
