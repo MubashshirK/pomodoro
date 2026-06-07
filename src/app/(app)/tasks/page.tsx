@@ -41,7 +41,10 @@ export default function TasksPage() {
   const visibleTasks = useMemo(() => {
     if (filter === "active") return tasks.filter((t) => !t.is_completed);
     if (filter === "completed") return tasks.filter((t) => t.is_completed);
-    return tasks;
+    return [...tasks].sort((a, b) => {
+      if (a.is_completed === b.is_completed) return 0;
+      return a.is_completed ? 1 : -1;
+    });
   }, [tasks, filter]);
 
   function openCreate() {

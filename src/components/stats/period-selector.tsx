@@ -12,10 +12,10 @@ export function PeriodSelector({ value, onChange }: Props) {
       value={value}
       onValueChange={(v) => onChange(v as StatsPeriod)}
     >
-      <TabsList>
-        <TabsTrigger value="day">Today</TabsTrigger>
-        <TabsTrigger value="week">7 days</TabsTrigger>
-        <TabsTrigger value="month">30 days</TabsTrigger>
+      <TabsList className="w-full sm:w-auto">
+        <TabsTrigger value="day" className="flex-1 sm:flex-none sm:min-w-20">Today</TabsTrigger>
+        <TabsTrigger value="week" className="flex-1 sm:flex-none sm:min-w-20">7 days</TabsTrigger>
+        <TabsTrigger value="month" className="flex-1 sm:flex-none sm:min-w-20">30 days</TabsTrigger>
       </TabsList>
     </Tabs>
   );
