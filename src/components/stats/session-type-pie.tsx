@@ -51,7 +51,7 @@ export function SessionTypePie({ byType }: Props) {
               innerRadius="58%"
               outerRadius="88%"
               paddingAngle={3}
-              stroke="hsl(var(--background))"
+              stroke="hsl(var(--card))"
               strokeWidth={3}
               labelLine={false}
               isAnimationActive={false}
