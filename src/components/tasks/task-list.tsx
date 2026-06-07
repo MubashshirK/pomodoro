@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -45,6 +46,14 @@ export function TaskList({
     }),
   );
 
+  const [suppressLayout, setSuppressLayout] = useState(false);
+
+  useEffect(() => {
+    if (!suppressLayout) return;
+    const t = setTimeout(() => setSuppressLayout(false), 250);
+    return () => clearTimeout(t);
+  }, [suppressLayout]);
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -52,6 +61,7 @@ export function TaskList({
     const newIndex = tasks.findIndex((t) => t.id === over.id);
     if (oldIndex < 0 || newIndex < 0) return;
     const next = arrayMove(tasks, oldIndex, newIndex);
+    setSuppressLayout(true);
     onReorder(next.map((t) => t.id));
   }
 
@@ -73,7 +83,7 @@ export function TaskList({
           {tasks.map((task) => (
             <motion.li
               key={task.id}
-              layout
+              layout={!suppressLayout}
               transition={{ type: "spring", stiffness: 500, damping: 40, mass: 0.8 }}
             >
               <TaskItem
