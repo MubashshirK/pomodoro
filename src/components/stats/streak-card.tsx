@@ -18,10 +18,10 @@ export function StreakCard({ streak, atRisk = false }: Props) {
           : `${streak} days in a row`;
   return (
     <Card>
-      <CardContent className="flex items-center gap-4 p-5">
+      <CardContent className="flex items-center gap-3 p-4 sm:gap-4 sm:p-5">
         <div
           className={cn(
-            "flex h-11 w-11 items-center justify-center rounded-lg",
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg sm:h-11 sm:w-11",
             atRisk
               ? "bg-muted text-muted-foreground"
               : streak > 0
@@ -31,12 +31,14 @@ export function StreakCard({ streak, atRisk = false }: Props) {
         >
           <Flame className="h-5 w-5" />
         </div>
-        <div>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] uppercase tracking-wide text-muted-foreground sm:text-xs">
             {atRisk ? "Streak at risk" : "Current streak"}
           </p>
-          <p className="font-mono text-2xl font-semibold tabular-nums">{streak}</p>
-          <p className="text-xs text-muted-foreground">{label}</p>
+          <p className="truncate font-mono text-xl font-semibold tabular-nums sm:text-2xl">
+            {streak}
+          </p>
+          <p className="truncate text-xs text-muted-foreground">{label}</p>
         </div>
       </CardContent>
     </Card>

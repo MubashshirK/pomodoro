@@ -20,24 +20,24 @@ const toneClass: Record<NonNullable<Props["tone"]>, string> = {
 export function StatCard({ icon: Icon, label, value, hint, tone = "default" }: Props) {
   return (
     <Card>
-      <CardContent className="flex items-center gap-4 p-5">
+      <CardContent className="flex items-center gap-3 p-4 sm:gap-4 sm:p-5">
         <div
           className={cn(
-            "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-muted",
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted sm:h-11 sm:w-11",
             toneClass[tone],
           )}
         >
           <Icon className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+          <p className="text-[10px] uppercase tracking-wide text-muted-foreground sm:text-xs">
             {label}
           </p>
-          <p className="truncate font-mono text-2xl font-semibold tabular-nums">
+          <p className="truncate font-mono text-xl font-semibold tabular-nums sm:text-2xl">
             {value}
           </p>
           {hint ? (
-            <p className="text-xs text-muted-foreground">{hint}</p>
+            <p className="truncate text-xs text-muted-foreground">{hint}</p>
           ) : null}
         </div>
       </CardContent>

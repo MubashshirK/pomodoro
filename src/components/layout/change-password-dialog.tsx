@@ -17,8 +17,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-export function ChangePasswordDialog() {
+export function ChangePasswordDialog({ className }: { className?: string }) {
   const router = useRouter();
   const { update } = useSession();
   const [open, setOpen] = useState(false);
@@ -56,16 +57,19 @@ export function ChangePasswordDialog() {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+          className={cn(
+            "relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+            className,
+          )}
         >
           <KeyRound className="h-4 w-4" />
-          Change password
+          Change Password
         </button>
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={onSubmit} className="space-y-4">
           <DialogHeader>
-            <DialogTitle>Change password</DialogTitle>
+              <DialogTitle>Change Password</DialogTitle>
             <DialogDescription>
               Choose a new password with at least 8 characters.
             </DialogDescription>

@@ -16,10 +16,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 const CONFIRM_PHRASE = "DELETE";
 
-export function DeleteAccountDialog() {
+export function DeleteAccountDialog({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -53,7 +54,10 @@ export function DeleteAccountDialog() {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-destructive outline-none transition-colors hover:bg-destructive/10 focus:bg-destructive/10 data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+          className={cn(
+            "relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-destructive outline-none transition-colors hover:bg-destructive/10 focus:bg-destructive/10 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+            className,
+          )}
         >
           <Trash2 className="h-4 w-4" />
           Delete account

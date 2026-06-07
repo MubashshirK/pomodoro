@@ -17,13 +17,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 export function UpdateNameDialog({
   currentName,
   email,
+  className,
 }: {
   currentName?: string | null;
   email?: string | null;
+  className?: string;
 }) {
   const router = useRouter();
   const { update } = useSession();
@@ -64,16 +67,19 @@ export function UpdateNameDialog({
       <DialogTrigger asChild>
         <button
           type="button"
-          className="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+          className={cn(
+            "relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+            className,
+          )}
         >
           <UserIcon className="h-4 w-4" />
-          Update name
+          Update Username
         </button>
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={onSubmit} className="space-y-4">
           <DialogHeader>
-            <DialogTitle>Update name</DialogTitle>
+              <DialogTitle>Update Username</DialogTitle>
             <DialogDescription>
               This is how you&apos;ll appear in the app.
             </DialogDescription>

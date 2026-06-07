@@ -15,6 +15,7 @@ import {
   Settings as SettingsIcon,
   Sparkles,
   Timer,
+  User as UserIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,6 +32,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useSettings, useUpdateSettings } from "@/hooks/use-settings";
 import { useTheme } from "@/hooks/use-theme";
+import { useSession } from "next-auth/react";
+import { UpdateNameDialog } from "@/components/layout/update-name-dialog";
+import { ChangePasswordDialog } from "@/components/layout/change-password-dialog";
+import { DeleteAccountDialog } from "@/components/layout/delete-account-dialog";
 import { soundManager } from "@/lib/sound";
 import { humanizeMinutes } from "@/lib/format";
 
@@ -64,6 +69,10 @@ export default function SettingsPage() {
   const { data, isLoading, isError, error } = useSettings();
   const update = useUpdateSettings();
   const { theme, setTheme } = useTheme();
+  const { data: session } = useSession();
+  const isGuest = session?.user?.isGuest ?? false;
+  const accountName = session?.user?.name?.trim() || (isGuest ? "Guest" : "—");
+  const accountEmail = session?.user?.email ?? null;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -350,6 +359,54 @@ export default function SettingsPage() {
                 <SelectItem value="system">System</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <UserIcon className="h-4 w-4" />
+            Account
+          </CardTitle>
+          <CardDescription>
+            Update your username, change your password, or delete your account.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 px-4 py-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">{accountName}</p>
+              {accountEmail ? (
+                <p className="truncate text-xs text-muted-foreground">
+                  {accountEmail}
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  {isGuest ? "Guest session" : "Signed in"}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <UpdateNameDialog
+                currentName={session?.user?.name ?? null}
+                email={accountEmail}
+                className="h-9 w-auto shrink-0 justify-center gap-1.5 rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground"
+              />
+              {isGuest ? null : (
+                <ChangePasswordDialog className="h-9 w-auto shrink-0 justify-center gap-1.5 rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground" />
+              )}
+            </div>
+          </div>
+          <Separator />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-medium">Delete account</p>
+              <p className="text-xs text-muted-foreground">
+                Permanently delete your account and all associated data.
+              </p>
+            </div>
+            <DeleteAccountDialog className="h-9 w-auto shrink-0 justify-center gap-1.5 rounded-md border border-destructive/40 bg-background px-3 text-sm font-medium text-destructive shadow-sm hover:bg-destructive/10 hover:text-destructive" />
           </div>
         </CardContent>
       </Card>

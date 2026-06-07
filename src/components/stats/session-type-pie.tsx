@@ -1,60 +1,62 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import type { TooltipProps } from "recharts";
-import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import type { StatsBySessionType } from "@/types";
+import { humanizeSeconds } from "@/lib/format";
 
 type Props = {
   byType: StatsBySessionType;
+  focusSeconds?: { work?: number; shortBreak?: number; longBreak?: number };
 };
 
-type Slice = { name: string; value: number; key: keyof StatsBySessionType; color: string };
-
-const LABEL: Record<keyof StatsBySessionType, string> = {
-  work: "Work",
-  shortBreak: "Short break",
-  longBreak: "Long break",
+type SliceKey = keyof StatsBySessionType;
+type Slice = {
+  key: SliceKey;
+  name: string;
+  short: string;
+  value: number;
+  color: string;
+  ringClass: string;
+  softClass: string;
 };
 
-const COLOR: Record<keyof StatsBySessionType, string> = {
-  work: "hsl(var(--bar))",
-  shortBreak: "hsl(var(--bar))",
-  longBreak: "hsl(var(--bar))",
+const META: Record<SliceKey, { name: string; short: string; ringClass: string; softClass: string }> = {
+  work: {
+    name: "Work",
+    short: "Work",
+    ringClass: "text-work",
+    softClass: "bg-work/15",
+  },
+  shortBreak: {
+    name: "Short break",
+    short: "Short",
+    ringClass: "text-shortBreak",
+    softClass: "bg-shortBreak/15",
+  },
+  longBreak: {
+    name: "Long break",
+    short: "Long",
+    ringClass: "text-longBreak",
+    softClass: "bg-longBreak/15",
+  },
 };
 
-function PieTooltip({
-  active,
-  payload,
-  coordinate,
-}: TooltipProps<ValueType, NameType>) {
-  if (!active || !payload || payload.length === 0 || !coordinate) return null;
-  const { x, y } = coordinate;
-  if (typeof x !== "number" || typeof y !== "number") return null;
-  const entry = payload[0];
-  const label = entry.name;
-  const value = entry.value as number;
-  return (
-    <div
-      className="pointer-events-none absolute z-50 rounded-lg border border-border/50 px-3 py-2 text-sm shadow-lg whitespace-nowrap"
-      style={{
-        left: x,
-        top: y,
-        transform: "translate(-50%, calc(-100% - 14px))",
-        transition: "transform 120ms ease-out, left 120ms ease-out, top 120ms ease-out",
-        background: "hsl(var(--tooltip-bg))",
-        color: "hsl(var(--tooltip-fg))",
-      }}
-    >
-      <div className="font-semibold">{label}</div>
-      <div className="text-muted-foreground">{value} sessions</div>
-    </div>
+export function SessionTypePie({ byType, focusSeconds }: Props) {
+  const total = (Object.keys(byType) as SliceKey[]).reduce(
+    (sum, k) => sum + byType[k],
+    0,
   );
-}
 
-export function SessionTypePie({ byType }: Props) {
-  const data: Slice[] = (Object.keys(byType) as (keyof StatsBySessionType)[])
-    .map((k) => ({ name: LABEL[k], value: byType[k], key: k, color: COLOR[k] }))
-    .filter((s) => s.value > 0);
-  const total = data.reduce((sum, s) => sum + s.value, 0);
+  const slices: Slice[] = (Object.keys(byType) as SliceKey[])
+    .map((k) => ({
+      key: k,
+      name: META[k].name,
+      short: META[k].short,
+      value: byType[k],
+      color: `var(--${k === "work" ? "work" : k === "shortBreak" ? "short-break" : "long-break"})`,
+      ringClass: META[k].ringClass,
+      softClass: META[k].softClass,
+    }))
+    .filter((s) => s.value > 0)
+    .sort((a, b) => b.value - a.value);
 
   if (total === 0) {
     return (
@@ -64,49 +66,101 @@ export function SessionTypePie({ byType }: Props) {
     );
   }
 
+  const chartData = slices.map((s) => ({ name: s.name, value: s.value }));
+  const dominant = slices[0];
+  const totalFocusSeconds = slices.reduce((sum, s) => {
+    const seconds = focusSeconds?.[s.key] ?? 0;
+    return sum + seconds;
+  }, 0);
+
   return (
-    <div className="flex h-72 w-full flex-col">
-      <div className="relative min-h-0 flex-1 overflow-visible">
+    <div className="flex flex-col gap-5 pt-1 sm:flex-row sm:items-center sm:gap-6">
+      <div className="relative mx-auto h-44 w-44 shrink-0 sm:mx-0 sm:h-48 sm:w-48">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart margin={{ top: 16, right: 16, bottom: 16, left: 16 }}>
+          <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
             <Pie
-              data={data}
+              data={chartData}
               dataKey="value"
               nameKey="name"
-              innerRadius="48%"
-              outerRadius="82%"
-              paddingAngle={3}
+              innerRadius="62%"
+              outerRadius="92%"
+              paddingAngle={2}
               stroke="var(--background)"
-              strokeWidth={2}
-              label={({ percent }) =>
-                percent > 0.08 ? `${Math.round(percent * 100)}%` : null
-              }
-              labelLine={false}
+              strokeWidth={3}
+              startAngle={90}
+              endAngle={-270}
               isAnimationActive={false}
+              cornerRadius={4}
             >
-              {data.map((entry) => (
-                <Cell key={entry.key} fill={entry.color} />
+              {slices.map((s) => (
+                <Cell key={s.key} fill={s.color} />
               ))}
             </Pie>
-            <Tooltip
-              content={<PieTooltip />}
-              cursor={{ fill: "hsl(var(--tooltip-fg))", fillOpacity: 0.08 }}
-              isAnimationActive={false}
-            />
           </PieChart>
         </ResponsiveContainer>
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
+          <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            Total
+          </span>
+          <span className="font-mono text-3xl font-semibold tabular-nums leading-none">
+            {total}
+          </span>
+          <span className="mt-1 text-[10px] text-muted-foreground">
+            {total === 1 ? "session" : "sessions"}
+          </span>
+        </div>
       </div>
-      <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pb-1 text-sm">
-        {data.map((entry) => {
-          const pct = Math.round((entry.value / total) * 100);
+
+      <ul className="flex min-w-0 flex-1 flex-col gap-3">
+        {slices.map((s) => {
+          const pct = total > 0 ? (s.value / total) * 100 : 0;
+          const seconds = focusSeconds?.[s.key] ?? 0;
+          const timeLabel = seconds > 0 ? humanizeSeconds(seconds) : null;
           return (
-            <li key={entry.key} className="flex items-center gap-1.5">
-              <span
-                className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-inset ring-black/5 dark:ring-white/10"
-                style={{ background: entry.color }}
-              />
-              <span className="text-muted-foreground">{entry.name}</span>
-              <span className="font-mono font-medium tabular-nums">{pct}%</span>
+            <li
+              key={s.key}
+              className="group flex flex-col gap-1.5 rounded-md"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex min-w-0 items-center gap-2">
+                  <span
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${s.softClass}`}
+                  >
+                    <span
+                      className={`h-2 w-2 rounded-full ${s.ringClass}`}
+                      style={{ backgroundColor: s.color }}
+                    />
+                  </span>
+                  <span className="truncate text-sm font-medium">{s.name}</span>
+                </div>
+                <div className="flex shrink-0 items-baseline gap-1.5">
+                  <span className="font-mono text-sm font-semibold tabular-nums">
+                    {s.value}
+                  </span>
+                  <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                    {Math.round(pct)}%
+                  </span>
+                </div>
+              </div>
+              <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-muted/60">
+                <div
+                  className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-500 ease-out"
+                  style={{
+                    width: `${pct}%`,
+                    backgroundColor: s.color,
+                  }}
+                />
+              </div>
+              {timeLabel ? (
+                <p className="text-[11px] text-muted-foreground">
+                  {timeLabel}
+                  {s.key === dominant?.key && totalFocusSeconds > 0 ? (
+                    <span className="ml-1.5 text-muted-foreground/70">
+                      · most of your time
+                    </span>
+                  ) : null}
+                </p>
+              ) : null}
             </li>
           );
         })}
