@@ -32,7 +32,7 @@ A modern, full-stack Pomodoro timer with task management, statistics, and themes
 | Forms | [react-hook-form](https://react-hook-form.com) + Zod resolver |
 | Icons | [lucide-react](https://lucide.dev) |
 | Drag & Drop | [@dnd-kit](https://dndkit.com) |
-| Fonts | [Inter](https://rsms.me/inter/) (UI) + [IBM Plex Mono](https://www.ibm.com/plex/) (digits only, via unicode-range `@font-face`) |
+| Fonts | [Inter](https://rsms.me/inter/) (UI) + [JetBrains Mono](https://www.jetbrains.com/lp/mono/) (digits only, via unicode-range `@font-face`) |
 
 ## Getting Started
 
@@ -177,7 +177,7 @@ The timer runs entirely on the client (Zustand store + a `setInterval` tick with
 ## Fonts
 
 - **Inter** — loaded via `next/font/google` for all UI text.
-- **IBM Plex Mono** — loaded via a custom `@font-face` restricted by `unicode-range` to digits and time characters (`0-9`, `:`, `.`, `%`, `/`, `,`) so only numbers get the monospace treatment.
+- **JetBrains Mono** — loaded via a custom `@font-face` restricted by `unicode-range` to digits and time characters (`0-9`, `:`, `.`, `%`, `/`, `,`) so only numbers get the monospace treatment.
 
 ## PWA
 
