@@ -23,7 +23,10 @@ export default function TimerPage() {
   useKeyboardShortcuts();
   const notifPerm = useNotificationPermission();
   const { data: stats } = useStats("day");
-  const streak = stats?.current_streak ?? 0;
+  const currentStreak = stats?.current_streak ?? 0;
+  const lastStreak = stats?.last_streak ?? 0;
+  const streakAtRisk = currentStreak === 0 && lastStreak > 0;
+  const streak = streakAtRisk ? lastStreak : currentStreak;
 
   const [ringSize, setRingSize] = useState(260);
   useEffect(() => {
@@ -77,16 +80,20 @@ export default function TimerPage() {
             variant="secondary"
             className={cn(
               "gap-1.5 rounded-full px-2.5 font-medium",
-              streak > 0
-                ? "bg-work/15 text-work hover:bg-work/20"
-                : "bg-muted text-muted-foreground hover:bg-muted",
+              streakAtRisk
+                ? "bg-muted text-muted-foreground hover:bg-muted"
+                : streak > 0
+                  ? "bg-work/15 text-work hover:bg-work/20"
+                  : "bg-muted text-muted-foreground hover:bg-muted",
             )}
             title={
-              streak === 0
-                ? "Start a session to begin a streak"
-                : streak === 1
-                  ? "1 day in a row"
-                  : `${streak} days in a row`
+              streakAtRisk
+                ? `Do a session today to keep your ${lastStreak}-day streak`
+                : streak === 0
+                  ? "Start a session to begin a streak"
+                  : streak === 1
+                    ? "1 day in a row"
+                    : `${streak} days in a row`
             }
           >
             <Flame className="h-3 w-3 shrink-0" />

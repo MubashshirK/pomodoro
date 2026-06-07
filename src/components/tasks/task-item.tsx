@@ -59,7 +59,14 @@ export function TaskItem({
   const setActiveTask = useTimerStore((s) => s.setActiveTask);
   const isActive = activeTask?.id === task.id;
 
-  const sortable = useSortable({ id: task.id, disabled: !draggable });
+  const sortable = useSortable({
+    id: task.id,
+    disabled: !draggable,
+    animateLayoutChanges: (args) => {
+      if (args.wasDragging) return false;
+      return true;
+    },
+  });
   const {
     attributes,
     listeners,

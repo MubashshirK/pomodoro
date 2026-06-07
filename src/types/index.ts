@@ -53,6 +53,7 @@ export type StatsResponse = {
   total_pomodoros: number;
   total_focus_seconds: number;
   current_streak: number;
+  last_streak: number;
   by_session_type: StatsBySessionType;
   per_day: StatsPerDay[];
   top_tasks: Task[];

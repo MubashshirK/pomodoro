@@ -82,6 +82,28 @@ function computeStreak(
   return streak;
 }
 
+function computeLastStreak(
+  sessions: PomodoroSessionLog[],
+  timezone: string,
+): number {
+  if (sessions.length === 0) return 0;
+  const workDays = new Set(
+    sessions
+      .filter((s) => s.session_type === "work")
+      .map((s) => ymdInTimezone(new Date(s.completed_at), timezone)),
+  );
+  if (workDays.size === 0) return 0;
+  const sortedDays = Array.from(workDays).sort();
+  const mostRecent = sortedDays[sortedDays.length - 1];
+  let streak = 0;
+  let cursor = mostRecent;
+  while (workDays.has(cursor)) {
+    streak += 1;
+    cursor = addDaysYmd(cursor, -1);
+  }
+  return streak;
+}
+
 export async function GET(req: Request) {
   try {
     const user = await requireUser();
@@ -152,6 +174,7 @@ export async function GET(req: Request) {
       total_pomodoros: totalPomodoros,
       total_focus_seconds: totalFocusSeconds,
       current_streak: computeStreak(sessions, timezone),
+      last_streak: computeLastStreak(sessions, timezone),
       by_session_type: byType,
       per_day: Array.from(perDayMap.values()),
       top_tasks: topTasks,

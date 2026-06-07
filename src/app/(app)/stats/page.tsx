@@ -15,6 +15,10 @@ import { humanizeSeconds } from "@/lib/format";
 export default function StatsPage() {
   const [period, setPeriod] = useState<StatsPeriod>("week");
   const { data, isLoading, isError, error, isFetching } = useStats(period);
+  const currentStreak = data?.current_streak ?? 0;
+  const lastStreak = data?.last_streak ?? 0;
+  const streakAtRisk = currentStreak === 0 && lastStreak > 0;
+  const streak = streakAtRisk ? lastStreak : currentStreak;
 
   return (
     <div className="space-y-6">
@@ -66,7 +70,7 @@ export default function StatsPage() {
                 (data?.by_session_type.longBreak ?? 0))}
           hint={`${data?.by_session_type.work ?? 0} work · ${data?.by_session_type.shortBreak ?? 0} short · ${data?.by_session_type.longBreak ?? 0} long`}
         />
-        <StreakCard streak={data?.current_streak ?? 0} />
+        <StreakCard streak={streak} atRisk={streakAtRisk} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
