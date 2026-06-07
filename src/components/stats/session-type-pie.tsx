@@ -19,9 +19,9 @@ const LABEL: Record<keyof StatsBySessionType, string> = {
 };
 
 const COLOR: Record<keyof StatsBySessionType, string> = {
-  work: "hsl(0 55% 50%)",
+  work: "hsl(142 40% 45%)",
   shortBreak: "hsl(210 45% 52%)",
-  longBreak: "hsl(270 35% 55%)",
+  longBreak: "hsl(0 55% 50%)",
 };
 
 export function SessionTypePie({ byType }: Props) {
