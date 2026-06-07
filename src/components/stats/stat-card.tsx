@@ -37,7 +37,9 @@ export function StatCard({ icon: Icon, label, value, hint, tone = "default" }: P
             {value}
           </p>
           {hint ? (
-            <p className="truncate text-xs text-muted-foreground">{hint}</p>
+            <p className="text-xs leading-snug text-muted-foreground line-clamp-2">
+              {hint}
+            </p>
           ) : null}
         </div>
       </CardContent>

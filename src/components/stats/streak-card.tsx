@@ -38,7 +38,9 @@ export function StreakCard({ streak, atRisk = false }: Props) {
           <p className="truncate font-mono text-xl font-semibold tabular-nums sm:text-2xl">
             {streak}
           </p>
-          <p className="truncate text-xs text-muted-foreground">{label}</p>
+          <p className="text-xs leading-snug text-muted-foreground line-clamp-2">
+            {label}
+          </p>
         </div>
       </CardContent>
     </Card>

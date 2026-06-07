@@ -19,15 +19,9 @@ const LABEL: Record<keyof StatsBySessionType, string> = {
 };
 
 const COLOR: Record<keyof StatsBySessionType, string> = {
-  work: "hsl(var(--work))",
-  shortBreak: "hsl(var(--short-break))",
-  longBreak: "hsl(var(--long-break))",
-};
-
-const SWATCH_BG: Record<keyof StatsBySessionType, string> = {
-  work: "bg-work/15",
-  shortBreak: "bg-shortBreak/15",
-  longBreak: "bg-longBreak/15",
+  work: "hsl(0 55% 50%)",
+  shortBreak: "hsl(210 45% 52%)",
+  longBreak: "hsl(270 35% 55%)",
 };
 
 export function SessionTypePie({ byType }: Props) {
@@ -91,7 +85,7 @@ export function SessionTypePie({ byType }: Props) {
             >
               <div className="flex min-w-0 items-center gap-2">
                 <span
-                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded ${SWATCH_BG[s.key]}`}
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-muted"
                   aria-hidden
                 >
                   <span
