@@ -9,10 +9,23 @@ export const statsKeys = {
   detail: (period: StatsPeriod) => ["stats", period] as const,
 };
 
+function clientTimezone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  } catch {
+    return "UTC";
+  }
+}
+
 export function useStats(period: StatsPeriod) {
   return useQuery<StatsResponse>({
     queryKey: statsKeys.detail(period),
-    queryFn: () => api.get<StatsResponse>(`/api/stats?period=${period}`),
+    queryFn: () => {
+      const tz = encodeURIComponent(clientTimezone());
+      return api.get<StatsResponse>(
+        `/api/stats?period=${period}&tz=${tz}`,
+      );
+    },
     staleTime: 60_000,
   });
 }

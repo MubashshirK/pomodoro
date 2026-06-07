@@ -65,12 +65,13 @@ export function TaskItem({
     listeners,
     setNodeRef,
     transform,
+    transition,
     isDragging,
   } = sortable;
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
-    transition: "transform 150ms ease",
+    transition,
     opacity: isDragging ? 0.6 : 1,
     zIndex: isDragging ? 50 : undefined,
   };
