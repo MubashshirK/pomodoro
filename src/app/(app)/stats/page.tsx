@@ -92,7 +92,7 @@ export default function StatsPage() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <div className="h-72 animate-pulse rounded-lg bg-muted" />
+              <div className="h-64 animate-pulse rounded-lg bg-muted" />
             ) : (
               <SessionTypePie byType={data?.by_session_type ?? { work: 0, shortBreak: 0, longBreak: 0 }} />
             )}
