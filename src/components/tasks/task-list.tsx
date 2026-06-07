@@ -14,6 +14,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { motion } from "framer-motion";
 import { TaskItem } from "@/components/tasks/task-item";
 import type { Task } from "@/types";
 
@@ -70,7 +71,11 @@ export function TaskList({
       >
         <ul className="space-y-2">
           {tasks.map((task) => (
-            <li key={task.id}>
+            <motion.li
+              key={task.id}
+              layout
+              transition={{ type: "spring", stiffness: 500, damping: 40, mass: 0.8 }}
+            >
               <TaskItem
                 task={task}
                 draggable={draggingEnabled}
@@ -79,7 +84,7 @@ export function TaskList({
                 onToggleComplete={onToggleComplete}
                 deleting={deletingId === task.id}
               />
-            </li>
+            </motion.li>
           ))}
         </ul>
       </SortableContext>
